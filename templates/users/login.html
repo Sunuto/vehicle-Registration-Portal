@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Login — VehicleReg{% endblock %}
+
+{% block content %}
+<div class="min-h-[70vh] flex items-center justify-center py-10">
+    <div class="card-auto w-full max-w-md p-8 sm:p-10">
+
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <div style="width:50px;height:50px;background:linear-gradient(135deg,var(--primary),var(--primary-light));border-radius:8px;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;">
+                <span style="font-size:1.4rem">🔐</span>
+            </div>
+            <h2 class="font-display font-bold text-2xl" style="color:var(--text);letter-spacing:0.1em;">WELCOME BACK</h2>
+            <p class="text-xs mt-1 font-title uppercase tracking-widest" style="color:var(--muted);">Sign in to your account</p>
+        </div>
+
+        <div class="divider-red mb-8"></div>
+
+        <form method="post" class="space-y-5">
+            {% csrf_token %}
+            <div>
+                <label class="font-title text-xs uppercase tracking-widest mb-2 block" style="color:var(--muted);">Username</label>
+                <input type="text" name="username" required
+                    style="background:transparent;border:1px solid var(--border);color:var(--text);border-radius:0.4rem;width:100%;padding:0.75rem 1rem;font-size:0.9rem;outline:none;transition:border 0.2s;font-family:'Exo 2',sans-serif;"
+                    onfocus="this.style.borderColor='var(--primary)'"
+                    onblur="this.style.borderColor='var(--border)'">
+            </div>
+            <div>
+                <label class="font-title text-xs uppercase tracking-widest mb-2 block" style="color:var(--muted);">Password</label>
+                <input type="password" name="password" required
+                    style="background:transparent;border:1px solid var(--border);color:var(--text);border-radius:0.4rem;width:100%;padding:0.75rem 1rem;font-size:0.9rem;outline:none;transition:border 0.2s;font-family:'Exo 2',sans-serif;"
+                    onfocus="this.style.borderColor='var(--primary)'"
+                    onblur="this.style.borderColor='var(--border)'">
+            </div>
+
+            <button type="submit" class="btn-red w-full py-3 text-center" style="width:100%;display:block;">
+                Ignition → Start
+            </button>
+        </form>
+
+        <div class="divider-red my-6"></div>
+
+        <p class="text-center text-sm" style="color:var(--muted);">
+            No account yet?
+            <a href="/register/" class="font-title font-bold uppercase tracking-wide hover:underline" style="color:var(--primary);">Register Here</a>
+        </p>
+    </div>
+</div>
+{% endblock %}

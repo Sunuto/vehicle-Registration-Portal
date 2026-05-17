@@ -1,0 +1,398 @@
+{% load static tailwind_tags %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}VehicleReg Nepal{% endblock %}</title>
+    {% tailwind_css %}
+    <link
+      href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Exo+2:wght@300;400;500;600&family=Orbitron:wght@400;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        font-family: "Exo 2", sans-serif;
+      }
+      .font-display {
+        font-family: "Orbitron", monospace;
+      }
+      .font-title {
+        font-family: "Rajdhani", sans-serif;
+      }
+
+      :root {
+        --bg: #fdf0e0;
+        --text: #2b1a0a;
+        --card: #fff8f0;
+        --border: #f0d5b0;
+        --primary: #c94f0c;
+        --primary-light: #e8820c;
+        --nav: rgba(255, 248, 240, 0.97);
+        --muted: #8a6040;
+        --accent: #f5e6d0;
+      }
+
+      body.dark {
+        --bg: #080b10;
+        --text: #e2e8f0;
+        --card: rgba(15, 20, 30, 0.85);
+        --border: rgba(255, 255, 255, 0.07);
+        --primary: #ef4444;
+        --primary-light: #f97316;
+        --nav: rgba(8, 11, 16, 0.95);
+        --muted: #94a3b8;
+        --accent: #0f172a;
+      }
+
+      body {
+        background: var(--bg);
+        color: var(--text);
+        transition:
+          background 0.3s,
+          color 0.3s;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image:
+          linear-gradient(rgba(220, 38, 38, 0.03) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(220, 38, 38, 0.03) 1px, transparent 1px);
+        background-size: 40px 40px;
+        z-index: -1;
+        pointer-events: none;
+      }
+
+      .primary {
+        color: var(--primary);
+      }
+      .muted {
+        color: var(--muted);
+      }
+
+      .navbar-auto {
+        background: var(--nav);
+        backdrop-filter: blur(20px);
+        border-bottom: 2px solid var(--primary);
+        box-shadow: 0 4px 30px rgba(220, 38, 38, 0.08);
+      }
+
+      .nav-link {
+        color: var(--muted);
+        letter-spacing: 0.1em;
+        font-size: 0.78rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-family: "Rajdhani", sans-serif;
+        transition: color 0.2s;
+        padding: 0.4rem 0;
+      }
+
+      .nav-link:hover {
+        color: var(--primary);
+      }
+
+      .btn-red {
+        background: linear-gradient(
+          135deg,
+          var(--primary),
+          var(--primary-light)
+        );
+        color: white;
+        font-family: "Rajdhani", sans-serif;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        font-size: 0.78rem;
+        text-transform: uppercase;
+        padding: 0.55rem 1.4rem;
+        border-radius: 0.4rem;
+        transition: all 0.25s ease;
+        box-shadow: 0 0 20px rgba(220, 38, 38, 0.25);
+        display: inline-block;
+      }
+
+      .btn-red:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 0 30px rgba(220, 38, 38, 0.4);
+      }
+
+      .btn-outline-red {
+        border: 1px solid var(--primary);
+        color: var(--primary);
+        font-family: "Rajdhani", sans-serif;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        font-size: 0.78rem;
+        text-transform: uppercase;
+        padding: 0.5rem 1.2rem;
+        border-radius: 0.4rem;
+        transition: all 0.25s ease;
+        background: transparent;
+        display: inline-block;
+      }
+
+      .btn-outline-red:hover {
+        background: rgba(220, 38, 38, 0.08);
+      }
+
+      .card-auto {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 0.75rem;
+        backdrop-filter: blur(16px);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+        border-left: 3px solid var(--primary);
+      }
+
+      .divider-red {
+        height: 1px;
+        background: linear-gradient(
+          to right,
+          transparent,
+          var(--primary),
+          transparent
+        );
+        opacity: 0.4;
+      }
+
+      .speed-line {
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          var(--primary),
+          var(--primary-light),
+          transparent
+        );
+      }
+
+      /* Mobile menu */
+      #mobile-menu {
+        display: none;
+        flex-direction: column;
+        gap: 0.75rem;
+        padding: 1rem 1.5rem;
+        background: var(--nav);
+        border-top: 1px solid var(--border);
+      }
+
+      #mobile-menu.open {
+        display: flex;
+      }
+
+      .alert-success {
+        background: rgba(34, 197, 94, 0.08);
+        border: 1px solid rgba(34, 197, 94, 0.2);
+        color: #4ade80;
+        border-radius: 0.5rem;
+      }
+      .alert-error {
+        background: rgba(239, 68, 68, 0.08);
+        border: 1px solid rgba(239, 68, 68, 0.2);
+        color: #f87171;
+        border-radius: 0.5rem;
+      }
+      .alert-warning {
+        background: rgba(249, 115, 22, 0.08);
+        border: 1px solid rgba(249, 115, 22, 0.2);
+        color: #fb923c;
+        border-radius: 0.5rem;
+      }
+      .alert-info {
+        background: rgba(59, 130, 246, 0.08);
+        border: 1px solid rgba(59, 130, 246, 0.2);
+        color: #60a5fa;
+        border-radius: 0.5rem;
+      }
+
+      ::-webkit-scrollbar {
+        width: 5px;
+      }
+      ::-webkit-scrollbar-track {
+        background: var(--bg);
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--primary);
+        border-radius: 999px;
+      }
+    </style>
+  </head>
+
+  <body id="body" class="min-h-screen flex flex-col">
+    <!-- Navbar -->
+    <nav class="navbar-auto sticky top-0 z-50">
+      <div
+        class="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex justify-between items-center"
+      >
+        <!-- Logo -->
+        <a href="/" class="flex items-center gap-3">
+          <div
+            style="
+              width: 36px;
+              height: 36px;
+              background: linear-gradient(135deg, #dc2626, #f97316);
+              border-radius: 6px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              flex-shrink: 0;
+            "
+          >
+            <span style="font-size: 1rem">🚗</span>
+          </div>
+          <div>
+            <p
+              class="font-display font-bold text-sm leading-none"
+              style="color: var(--primary); letter-spacing: 0.15em"
+            >
+              VEHICLEREG
+            </p>
+            <p
+              style="
+                font-size: 0.5rem;
+                color: var(--muted);
+                letter-spacing: 0.2em;
+                text-transform: uppercase;
+                font-family: &quot;Rajdhani&quot;, sans-serif;
+              "
+            >
+              Nepal · POC
+            </p>
+          </div>
+        </a>
+
+        <!-- Desktop Nav -->
+        <div class="hidden md:flex items-center gap-5">
+          <a href="/" class="nav-link">Home</a>
+          <a href="/dashboard/" class="nav-link">Dashboard</a>
+          {% if user.is_authenticated %}
+          <a href="/staff/" class="nav-link">Staff Panel</a>
+
+          <a href="/admin/" class="nav-link">Admin</a>
+          <form method="post" action="/logout/" style="margin: 0">
+            {% csrf_token %}
+            <button type="submit" class="btn-outline-red">Logout</button>
+          </form>
+          {% else %}
+          <a href="/login/" class="nav-link">Login</a>
+          <a href="/register/" class="btn-red">Register</a>
+          {% endif %}
+          <button
+            onclick="toggleTheme()"
+            class="btn-outline-red"
+            style="padding: 0.4rem 0.7rem"
+          >
+            🌙
+          </button>
+        </div>
+
+        <!-- Mobile: theme + hamburger -->
+        <div class="flex md:hidden items-center gap-2">
+          <button
+            onclick="toggleTheme()"
+            class="btn-outline-red"
+            style="padding: 0.35rem 0.6rem; font-size: 0.8rem"
+          >
+            🌙
+          </button>
+          <button
+            onclick="toggleMenu()"
+            class="btn-outline-red"
+            style="padding: 0.35rem 0.7rem; font-size: 1rem"
+            id="hamburger"
+          >
+            ☰
+          </button>
+        </div>
+      </div>
+
+      <!-- Speed line -->
+      <div class="speed-line"></div>
+
+      <!-- Mobile Menu -->
+      <div id="mobile-menu">
+        <a href="/" class="nav-link">Home</a>
+        {% if user.is_authenticated %}
+        <a href="/dashboard/" class="nav-link">Dashboard</a>
+        {% if user.role == 'staff' or user.is_superuser %}
+        <a href="/staff/" class="nav-link">Staff Panel</a>
+        <a href="/admin/" class="nav-link">Admin</a>
+        {% endif %}
+        <form method="post" action="/logout/" style="margin: 0">
+          {% csrf_token %}
+          <button type="submit" class="btn-outline-red">Logout</button>
+        </form>
+        {% else %}
+        <a href="/login/" class="nav-link">Login</a>
+        <a href="/register/" class="btn-red text-center">Register</a>
+        {% endif %}
+      </div>
+    </nav>
+
+    <!-- Messages -->
+    {% if messages %}
+    <div class="max-w-6xl mx-auto mt-4 px-4 sm:px-6 w-full">
+      {% for message in messages %}
+      <div
+        class="px-4 py-3 mb-2 text-sm font-medium {% if message.tags == 'error' %}alert-error {% elif message.tags == 'success' %}alert-success {% elif message.tags == 'warning' %}alert-warning {% else %}alert-info{% endif %}"
+      >
+        {{ message }}
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Main Content -->
+    <main class="max-w-6xl mx-auto mt-8 px-4 sm:px-6 w-full flex-1">
+      {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer
+      class="mt-20 py-10 text-center"
+      style="background: var(--accent); border-top: 2px solid var(--primary)"
+    >
+      <p
+        class="font-display font-bold text-lg"
+        style="color: var(--primary); letter-spacing: 0.2em"
+      >
+        VEHICLEREG
+      </p>
+      <div class="divider-red w-24 mx-auto my-3"></div>
+      <p
+        style="
+          color: var(--muted);
+          font-size: 0.7rem;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          font-family: &quot;Rajdhani&quot;, sans-serif;
+        "
+      >
+        © 2026 Vehicle Registration Portal
+      </p>
+    </footer>
+    >
+
+    <script>
+      const body = document.body;
+      if (localStorage.getItem("theme") === "dark") body.classList.add("dark");
+
+      function toggleTheme() {
+        body.classList.toggle("dark");
+        localStorage.setItem(
+          "theme",
+          body.classList.contains("dark") ? "dark" : "light",
+        );
+      }
+
+      function toggleMenu() {
+        const menu = document.getElementById("mobile-menu");
+        menu.classList.toggle("open");
+      }
+    </script>
+  </body>
+</html>

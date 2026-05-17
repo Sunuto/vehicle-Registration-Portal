@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% block title %}Home — VehicleReg Nepal{% endblock %}
+
+{% block content %}
+
+<!-- Hero Section -->
+<div class="text-center py-16 sm:py-24">
+    <p class="font-title text-xs uppercase tracking-widest mb-4" style="color:var(--primary);letter-spacing:0.3em;">
+        ⚡ Nepal's Modern Vehicle Portal
+    </p>
+    <h1 class="font-display font-bold text-3xl sm:text-5xl lg:text-6xl mb-6 leading-tight" style="color:var(--text);">
+        REGISTER YOUR <br>
+        <span style="color:var(--primary);">VEHICLE</span> THE
+        <span style="color:var(--primary-light);">SMART WAY</span>
+    </h1>
+    <p class="text-sm sm:text-base mb-10 max-w-xl mx-auto" style="color:var(--muted);">
+        Fast KYC verification, OCR-powered autofill, and instant approval — all in one place.
+    </p>
+    <div class="flex flex-col sm:flex-row justify-center gap-4">
+        <a href="/register/" class="btn-red px-8 py-3 text-center">Get Started →</a>
+        <a href="#how" class="btn-outline-red px-8 py-3 text-center">Learn More</a>
+    </div>
+</div>
+
+<!-- Stats -->
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-16">
+    <div class="card-auto p-6 text-center">
+        <p class="font-display font-bold text-3xl sm:text-4xl mb-1" style="color:var(--primary);">1200+</p>
+        <p class="font-title uppercase tracking-widest text-xs" style="color:var(--muted);">Vehicles Registered</p>
+    </div>
+    <div class="card-auto p-6 text-center">
+        <p class="font-display font-bold text-3xl sm:text-4xl mb-1" style="color:var(--primary);">98%</p>
+        <p class="font-title uppercase tracking-widest text-xs" style="color:var(--muted);">Approval Rate</p>
+    </div>
+    <div class="card-auto p-6 text-center">
+        <p class="font-display font-bold text-3xl sm:text-4xl mb-1" style="color:var(--primary);">24h</p>
+        <p class="font-title uppercase tracking-widest text-xs" style="color:var(--muted);">Avg Processing Time</p>
+    </div>
+</div>
+
+<!-- How It Works -->
+<div id="how" class="mb-16">
+    <div class="text-center mb-10">
+        <p class="font-title text-xs uppercase tracking-widest mb-2" style="color:var(--primary);letter-spacing:0.3em;">The Process</p>
+        <h2 class="font-display font-bold text-2xl sm:text-3xl" style="color:var(--text);">HOW IT <span style="color:var(--primary);">WORKS</span></h2>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+        <div class="card-auto p-8 text-center group hover:shadow-lg transition-all duration-300">
+            <div class="text-5xl mb-4">📝</div>
+            <h3 class="font-title font-bold text-xl uppercase tracking-wide mb-2" style="color:var(--text);">Sign Up</h3>
+            <div class="divider-red mb-3"></div>
+            <p class="text-sm leading-relaxed" style="color:var(--muted);">Create your account and fill in your basic profile information to get started.</p>
+        </div>
+        <div class="card-auto p-8 text-center group hover:shadow-lg transition-all duration-300">
+            <div class="text-5xl mb-4">📄</div>
+            <h3 class="font-title font-bold text-xl uppercase tracking-wide mb-2" style="color:var(--text);">Complete KYC</h3>
+            <div class="divider-red mb-3"></div>
+            <p class="text-sm leading-relaxed" style="color:var(--muted);">Upload your citizenship card. Our OCR fills the form for you automatically.</p>
+        </div>
+        <div class="card-auto p-8 text-center group hover:shadow-lg transition-all duration-300">
+            <div class="text-5xl mb-4">🚗</div>
+            <h3 class="font-title font-bold text-xl uppercase tracking-wide mb-2" style="color:var(--text);">Register Vehicle</h3>
+            <div class="divider-red mb-3"></div>
+            <p class="text-sm leading-relaxed" style="color:var(--muted);">Submit vehicle details and documents. Staff approves within 24 hours.</p>
+        </div>
+    </div>
+</div>
+
+<!-- Features -->
+<div class="mb-16">
+    <div class="text-center mb-10">
+        <p class="font-title text-xs uppercase tracking-widest mb-2" style="color:var(--primary);letter-spacing:0.3em;">Why Choose Us</p>
+        <h2 class="font-display font-bold text-2xl sm:text-3xl" style="color:var(--text);">BUILT FOR <span style="color:var(--primary);">SPEED</span></h2>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="card-auto p-6 flex items-start gap-4">
+            <span class="text-3xl">🧠</span>
+            <div>
+                <h4 class="font-title font-bold uppercase tracking-wide mb-1" style="color:var(--text);">OCR Auto-fill</h4>
+                <p class="text-sm" style="color:var(--muted);">Upload your citizenship card and our system automatically reads and fills your details.</p>
+            </div>
+        </div>
+        <div class="card-auto p-6 flex items-start gap-4">
+            <span class="text-3xl">🔍</span>
+            <div>
+                <h4 class="font-title font-bold uppercase tracking-wide mb-1" style="color:var(--text);">Fraud Detection</h4>
+                <p class="text-sm" style="color:var(--muted);">pHash algorithm detects duplicate or tampered documents instantly.</p>
+            </div>
+        </div>
+        <div class="card-auto p-6 flex items-start gap-4">
+            <span class="text-3xl">📄</span>
+            <div>
+                <h4 class="font-title font-bold uppercase tracking-wide mb-1" style="color:var(--text);">PDF Slip</h4>
+                <p class="text-sm" style="color:var(--muted);">Download your registration slip as a PDF instantly after approval.</p>
+            </div>
+        </div>
+        <div class="card-auto p-6 flex items-start gap-4">
+            <span class="text-3xl">🔔</span>
+            <div>
+                <h4 class="font-title font-bold uppercase tracking-wide mb-1" style="color:var(--text);">Notifications</h4>
+                <p class="text-sm" style="color:var(--muted);">Get email updates on every step of your registration process.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CTA -->
+<div class="card-auto p-10 sm:p-16 text-center mb-10" style="border-left:none;border-top:3px solid var(--primary);border-bottom:3px solid var(--primary-light);">
+    <p class="font-title text-xs uppercase tracking-widest mb-3" style="color:var(--primary);letter-spacing:0.3em;">Ready to roll?</p>
+    <h2 class="font-display font-bold text-2xl sm:text-4xl mb-4" style="color:var(--text);">START YOUR <span style="color:var(--primary);">ENGINE</span></h2>
+    <p class="text-sm mb-8 max-w-md mx-auto" style="color:var(--muted);">Join thousands who've already registered their vehicles online. Fast, secure, and simple.</p>
+    <a href="/register/" class="btn-red px-10 py-3 inline-block">Create Free Account →</a>
+</div>
+
+{% endblock %}

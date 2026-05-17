@@ -1,0 +1,62 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual Environment
+env/
+venv/
+.venv/
+
+# Django
+db.sqlite3
+*.sqlite3
+
+# Media Files
+media/
+
+# Static Build Files
+staticfiles/
+
+# Environment Variables
+.env
+
+# VS Code
+.vscode/
+
+# PyCharm
+.idea/
+
+# macOS
+.DS_Store
+
+# Logs
+*.log
+
+# Coverage / Testing
+htmlcov/
+.coverage
+.pytest_cache/
+
+# Migrations Cache
+*.pyc
+
+# Tailwind / Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Tailwind build cache
+theme/static_src/node_modules/
+theme/static_src/package-lock.json
+
+# Temporary Files
+*.tmp
+*.swp
+
+# Tesseract OCR temp outputs
+*.txt
+
+# Generated PDFs
+*.pdf

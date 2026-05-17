@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% block title %}Register — VehicleReg{% endblock %}
+
+{% block content %}
+<div class="min-h-[70vh] flex items-center justify-center py-10">
+    <div class="card-auto w-full max-w-lg p-8 sm:p-10">
+
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <div style="width:50px;height:50px;background:linear-gradient(135deg,var(--primary),var(--primary-light));border-radius:8px;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;">
+                <span style="font-size:1.4rem">📝</span>
+            </div>
+            <h2 class="font-display font-bold text-2xl" style="color:var(--text);letter-spacing:0.1em;">CREATE ACCOUNT</h2>
+            <p class="text-xs mt-1 font-title uppercase tracking-widest" style="color:var(--muted);">Join Vehicle-Reg Nepal today</p>
+        </div>
+
+        <div class="divider-red mb-8"></div>
+
+        <form method="post" class="space-y-4">
+            {% csrf_token %}
+
+            <!-- First + Last Name -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="font-title text-xs uppercase tracking-widest mb-2 block" style="color:var(--muted);">First Name</label>
+                    <input type="text" name="first_name"
+                        style="background:transparent;border:1px solid var(--border);color:var(--text);border-radius:0.4rem;width:100%;padding:0.75rem 1rem;font-size:0.9rem;outline:none;transition:border 0.2s;font-family:'Exo 2',sans-serif;"
+                        onfocus="this.style.borderColor='var(--primary)'"
+                        onblur="this.style.borderColor='var(--border)'">
+                </div>
+                <div>
+                    <label class="font-title text-xs uppercase tracking-widest mb-2 block" style="color:var(--muted);">Last Name</label>
+                    <input type="text" name="last_name"
+                        style="background:transparent;border:1px solid var(--border);color:var(--text);border-radius:0.4rem;width:100%;padding:0.75rem 1rem;font-size:0.9rem;outline:none;transition:border 0.2s;font-family:'Exo 2',sans-serif;"
+                        onfocus="this.style.borderColor='var(--primary)'"
+                        onblur="this.style.borderColor='var(--border)'">
+                </div>
+            </div>
+
+            <div>
+                <label class="font-title text-xs uppercase tracking-widest mb-2 block" style="color:var(--muted);">Username</label>
+                <input type="text" name="username" required
+                    style="background:transparent;border:1px solid var(--border);color:var(--text);border-radius:0.4rem;width:100%;padding:0.75rem 1rem;font-size:0.9rem;outline:none;transition:border 0.2s;font-family:'Exo 2',sans-serif;"
+                    onfocus="this.style.borderColor='var(--primary)'"
+                    onblur="this.style.borderColor='var(--border)'">
+            </div>
+
+            <div>
+                <label class="font-title text-xs uppercase tracking-widest mb-2 block" style="color:var(--muted);">Email</label>
+                <input type="email" name="email"
+                    style="background:transparent;border:1px solid var(--border);color:var(--text);border-radius:0.4rem;width:100%;padding:0.75rem 1rem;font-size:0.9rem;outline:none;transition:border 0.2s;font-family:'Exo 2',sans-serif;"
+                    onfocus="this.style.borderColor='var(--primary)'"
+                    onblur="this.style.borderColor='var(--border)'">
+            </div>
+
+            <div>
+                <label class="font-title text-xs uppercase tracking-widest mb-2 block" style="color:var(--muted);">Password</label>
+                <input type="password" name="password1" required
+                    style="background:transparent;border:1px solid var(--border);color:var(--text);border-radius:0.4rem;width:100%;padding:0.75rem 1rem;font-size:0.9rem;outline:none;transition:border 0.2s;font-family:'Exo 2',sans-serif;"
+                    onfocus="this.style.borderColor='var(--primary)'"
+                    onblur="this.style.borderColor='var(--border)'">
+            </div>
+
+            <div>
+                <label class="font-title text-xs uppercase tracking-widest mb-2 block" style="color:var(--muted);">Confirm Password</label>
+                <input type="password" name="password2" required
+                    style="background:transparent;border:1px solid var(--border);color:var(--text);border-radius:0.4rem;width:100%;padding:0.75rem 1rem;font-size:0.9rem;outline:none;transition:border 0.2s;font-family:'Exo 2',sans-serif;"
+                    onfocus="this.style.borderColor='var(--primary)'"
+                    onblur="this.style.borderColor='var(--border)'">
+            </div>
+
+            <!-- Errors -->
+            {% if form.errors %}
+            <div style="background:rgba(220,38,38,0.08);border:1px solid rgba(220,38,38,0.2);border-radius:0.4rem;padding:0.75rem 1rem;">
+                {% for field in form %}
+                    {% for error in field.errors %}
+                        <p class="text-sm" style="color:var(--primary);">⚠ {{ error }}</p>
+                    {% endfor %}
+                {% endfor %}
+                {% for error in form.non_field_errors %}
+                    <p class="text-sm" style="color:var(--primary);">⚠ {{ error }}</p>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <button type="submit" class="btn-red w-full py-3 text-center" style="width:100%;display:block;">
+                Create Account →
+            </button>
+        </form>
+
+        <div class="divider-red my-6"></div>
+
+        <p class="text-center text-sm" style="color:var(--muted);">
+            Already have an account?
+            <a href="/login/" class="font-title font-bold uppercase tracking-wide hover:underline" style="color:var(--primary);">Login Here</a>
+        </p>
+    </div>
+</div>
+{% endblock %}
