@@ -268,11 +268,12 @@
         <!-- Desktop Nav -->
         <div class="hidden md:flex items-center gap-5">
           <a href="/" class="nav-link">Home</a>
-          <a href="/dashboard/" class="nav-link">Dashboard</a>
           {% if user.is_authenticated %}
+          <a href="/dashboard/" class="nav-link">Dashboard</a>
+          {% if user.role == 'staff' or user.is_superuser %}
           <a href="/staff/" class="nav-link">Staff Panel</a>
-
           <a href="/admin/" class="nav-link">Admin</a>
+          {% endif %}
           <form method="post" action="/logout/" style="margin: 0">
             {% csrf_token %}
             <button type="submit" class="btn-outline-red">Logout</button>
