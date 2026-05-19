@@ -7,8 +7,13 @@ from users.models import Profile
 
 @login_required
 def upload_kyc(request):
+    # Block staff from accessing KYC upload
+    if request.user.role == 'staff' or request.user.is_superuser:
+        messages.error(request, 'Staff members do not need to submit KYC.')
+        return redirect('staff_dashboard')
+
     existing_docs = KycDocument.objects.filter(user=request.user)
-    
+
     if request.method == 'POST':
         form = KycUploadForm(request.POST, request.FILES)
         if form.is_valid():
@@ -16,7 +21,6 @@ def upload_kyc(request):
             doc.user = request.user
             doc.save()
 
-            # Update profile KYC status to submitted
             profile = request.user.profile
             profile.kyc_status = 'submitted'
             profile.save()

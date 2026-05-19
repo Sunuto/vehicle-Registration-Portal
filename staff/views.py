@@ -1,7 +1,10 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
+from django.contrib import messages
+from django.utils import timezone
 from users.models import CustomUser, Profile
+from kyc.models import KycDocument
 
 def staff_required(view_func):
     def wrapper(request, *args, **kwargs):
@@ -31,3 +34,71 @@ def staff_dashboard(request):
         'rejected_kyc': rejected_kyc,
         'recent_users': recent_users,
     })
+
+@login_required
+@staff_required
+def kyc_review_list(request):
+    documents = KycDocument.objects.all().order_by('-uploaded_at')
+    status_filter = request.GET.get('status', '')
+    user_filter = request.GET.get('user', '')
+
+    if status_filter:
+        documents = documents.filter(status=status_filter)
+    if user_filter:
+        documents = documents.filter(user__username=user_filter)
+
+    return render(request, 'staff/kyc_review.html', {
+        'documents': documents,
+        'status_filter': status_filter,
+        'user_filter': user_filter,
+    })
+
+@login_required
+@staff_required
+def kyc_review_detail(request, doc_id):
+    doc = get_object_or_404(KycDocument, id=doc_id)
+
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        remarks = request.POST.get('remarks', '')
+
+        if action == 'approve':
+            doc.status = 'approved'
+            doc.remarks = remarks
+            doc.reviewed_by = request.user
+            doc.reviewed_at = timezone.now()
+            doc.save()
+
+            all_docs = KycDocument.objects.filter(user=doc.user)
+            if all_docs.filter(status='approved').count() == all_docs.count():
+                doc.user.profile.kyc_status = 'approved'
+                doc.user.profile.save()
+
+            messages.success(request, f'Document approved for {doc.user.username}!')
+
+        elif action == 'reject':
+            doc.status = 'rejected'
+            doc.remarks = remarks
+            doc.reviewed_by = request.user
+            doc.reviewed_at = timezone.now()
+            doc.save()
+
+            doc.user.profile.kyc_status = 'rejected'
+            doc.user.profile.save()
+
+            messages.error(request, f'Document rejected for {doc.user.username}.')
+
+        return redirect('kyc_review_list')
+
+    return render(request, 'staff/kyc_review_detail.html', {'doc': doc})
+
+@login_required
+@staff_required
+def users_list(request):
+    users = CustomUser.objects.filter(role='end_user').order_by('-date_joined')
+    return render(request, 'staff/users_list.html', {'users': users})
+
+@login_required
+@staff_required
+def vehicles_list(request):
+    return render(request, 'staff/vehicles_list.html')

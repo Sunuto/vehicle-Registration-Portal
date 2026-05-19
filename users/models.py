@@ -3,7 +3,7 @@ from django.db import models
 
 class CustomUser(AbstractUser):
     ROLE_CHOICES = (
-        ('end_user', 'End User'),
+        ('end_user', 'Citizen'),
         ('staff', 'Staff'),
     )
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='end_user')
