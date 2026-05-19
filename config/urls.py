@@ -28,4 +28,5 @@ urlpatterns = [
     path('login/', views.login_view, name='login'),
     path('logout/', views.logout_view, name='logout'),
     path('staff/', include('staff.urls')),
+    path('kyc/', include('kyc.urls')),   # ← ADD THIS
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

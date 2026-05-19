@@ -1,3 +1,32 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from .models import KycDocument
+from .forms import KycUploadForm
+from users.models import Profile
 
-# Create your views here.
+@login_required
+def upload_kyc(request):
+    existing_docs = KycDocument.objects.filter(user=request.user)
+    
+    if request.method == 'POST':
+        form = KycUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            doc = form.save(commit=False)
+            doc.user = request.user
+            doc.save()
+
+            # Update profile KYC status to submitted
+            profile = request.user.profile
+            profile.kyc_status = 'submitted'
+            profile.save()
+
+            messages.success(request, 'Document uploaded successfully!')
+            return redirect('upload_kyc')
+    else:
+        form = KycUploadForm()
+
+    return render(request, 'kyc/upload.html', {
+        'form': form,
+        'existing_docs': existing_docs,
+    })
