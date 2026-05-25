@@ -18,6 +18,7 @@ class KycDocument(models.Model):
     document_image = models.ImageField(upload_to='kyc_docs/')
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
     remarks = models.TextField(blank=True, null=True)
+    ocr_raw_text = models.TextField(blank=True, null=True)
     uploaded_at = models.DateTimeField(auto_now_add=True)
     reviewed_at = models.DateTimeField(blank=True, null=True)
     reviewed_by = models.ForeignKey(

@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.utils import timezone
 from users.models import CustomUser, Profile
 from kyc.models import KycDocument
+from vehicles.models import Vehicle
 
 def staff_required(view_func):
     def wrapper(request, *args, **kwargs):
@@ -101,4 +102,40 @@ def users_list(request):
 @login_required
 @staff_required
 def vehicles_list(request):
-    return render(request, 'staff/vehicles_list.html')
+    vehicles = Vehicle.objects.all().order_by('-submitted_at')
+    status_filter = request.GET.get('status', '')
+    if status_filter:
+        vehicles = vehicles.filter(status=status_filter)
+    return render(request, 'staff/vehicles_list.html', {
+        'vehicles': vehicles,
+        'status_filter': status_filter,
+    })
+
+@login_required
+@staff_required
+def vehicle_review(request, vehicle_id):
+    vehicle = get_object_or_404(Vehicle, id=vehicle_id)
+
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        remarks = request.POST.get('remarks', '')
+
+        if action == 'approve':
+            vehicle.status = 'approved'
+            vehicle.remarks = remarks
+            vehicle.reviewed_by = request.user
+            vehicle.reviewed_at = timezone.now()
+            vehicle.save()
+            messages.success(request, f'Vehicle approved for {vehicle.owner.username}!')
+
+        elif action == 'reject':
+            vehicle.status = 'rejected'
+            vehicle.remarks = remarks
+            vehicle.reviewed_by = request.user
+            vehicle.reviewed_at = timezone.now()
+            vehicle.save()
+            messages.error(request, f'Vehicle rejected for {vehicle.owner.username}.')
+
+        return redirect('staff_vehicles_list')
+
+    return render(request, 'staff/vehicle_review.html', {'vehicle': vehicle})

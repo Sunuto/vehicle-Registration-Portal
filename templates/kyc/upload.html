@@ -104,5 +104,40 @@
         </div>
     </div>
 </div>
+<!-- OCR Results -->
+{% if ocr_data %}
+<div class="card-auto p-6 sm:p-8 mt-6">
+    <div class="mb-6">
+        <p class="font-title text-xs uppercase tracking-widest mb-1" style="color:var(--primary);">🧠 OCR Result</p>
+        <h2 class="font-display font-bold text-lg" style="color:var(--text);">EXTRACTED DATA</h2>
+    </div>
+    <div class="divider-red mb-6"></div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm mb-6">
+        <div>
+            <p class="font-title text-xs uppercase tracking-widest mb-1" style="color:var(--muted);">Full Name</p>
+            <p class="font-medium" style="color:var(--text);">{{ ocr_data.full_name|default:"Not detected" }}</p>
+        </div>
+        <div>
+            <p class="font-title text-xs uppercase tracking-widest mb-1" style="color:var(--muted);">Citizenship No</p>
+            <p class="font-medium" style="color:var(--text);">{{ ocr_data.citizenship_number|default:"Not detected" }}</p>
+        </div>
+        <div>
+            <p class="font-title text-xs uppercase tracking-widest mb-1" style="color:var(--muted);">Date of Birth</p>
+            <p class="font-medium" style="color:var(--text);">{{ ocr_data.date_of_birth|default:"Not detected" }}</p>
+        </div>
+        <div>
+            <p class="font-title text-xs uppercase tracking-widest mb-1" style="color:var(--muted);">District</p>
+            <p class="font-medium" style="color:var(--text);">{{ ocr_data.district|default:"Not detected" }}</p>
+        </div>
+    </div>
+
+    <!-- Raw OCR Text -->
+    <div>
+        <p class="font-title text-xs uppercase tracking-widest mb-2" style="color:var(--muted);">Raw OCR Output</p>
+        <div style="background:rgba(220,38,38,0.03);border:1px solid var(--border);border-radius:0.4rem;padding:1rem;font-size:0.8rem;font-family:monospace;color:var(--muted);white-space:pre-wrap;">{{ ocr_data.raw_text }}</div>
+    </div>
+</div>
+{% endif %}
 
 {% endblock %}

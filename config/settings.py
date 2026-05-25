@@ -136,3 +136,5 @@ AUTH_USER_MODEL = 'users.CustomUser'
 
 TAILWIND_APP_NAME = 'theme'
 INTERNAL_IPS = ['127.0.0.1']
+
+TESSERACT_PATH = r'C:\Program Files\Tesseract-OCR\tesseract.exe'

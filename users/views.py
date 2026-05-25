@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import CustomUser, Profile
 from .forms import RegisterForm
-
+from vehicles.models import Vehicle 
 def home(request):
     return render(request, 'home.html')
 
@@ -45,7 +45,9 @@ def logout_view(request):
 @login_required
 def dashboard(request):
     profile, created = Profile.objects.get_or_create(user=request.user)
+    vehicles = Vehicle.objects.filter(owner=request.user) if request.user.role == 'end_user' else []
     return render(request, 'users/dashboard.html', {
         'user': request.user,
         'profile': profile,
+        'vehicles': vehicles,
     })

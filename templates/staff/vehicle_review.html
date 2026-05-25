@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+{% block title %}Review Vehicle — Staff{% endblock %}
+
+{% block content %}
+
+<!-- Header -->
+<div class="mb-8">
+    <a href="/staff/vehicles/" class="font-title text-xs uppercase tracking-widest hover:underline" style="color:var(--muted);">← Back to Vehicles</a>
+    <h1 class="font-display font-bold text-2xl sm:text-3xl mt-2" style="color:var(--text);">
+        REVIEW <span style="color:var(--primary);">VEHICLE</span>
+    </h1>
+    <div class="divider-red mt-3 max-w-xs"></div>
+</div>
+
+<div class="flex flex-col lg:flex-row gap-6">
+
+    <!-- Vehicle Details -->
+    <div class="flex-1">
+        <div class="card-auto p-6 sm:p-8">
+            <div class="mb-6">
+                <p class="font-title text-xs uppercase tracking-widest mb-1" style="color:var(--primary);">Submission</p>
+                <h2 class="font-display font-bold text-lg" style="color:var(--text);">VEHICLE DETAILS</h2>
+            </div>
+            <div class="divider-red mb-6"></div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 text-sm">
+                <div>
+                    <p class="font-title text-xs uppercase tracking-widest mb-1" style="color:var(--muted);">Owner</p>
+                    <p class="font-medium" style="color:var(--text);">{{ vehicle.owner.username }}</p>
+                </div>
+                <div>
+                    <p class="font-title text-xs uppercase tracking-widest mb-1" style="color:var(--muted);">Vehicle Type</p>
+                    <p class="font-medium" style="color:var(--text);">{{ vehicle.get_vehicle_type_display }}</p>
+                </div>
+                <div>
+                    <p class="font-title text-xs uppercase tracking-widest mb-1" style="color:var(--muted);">Make</p>
+                    <p class="font-medium" style="color:var(--text);">{{ vehicle.make }}</p>
+                </div>
+                <div>
+                    <p class="font-title text-xs uppercase tracking-widest mb-1" style="color:var(--muted);">Model</p>
+                    <p class="font-medium" style="color:var(--text);">{{ vehicle.model }}</p>
+                </div>
+                <div>
+                    <p class="font-title text-xs uppercase tracking-widest mb-1" style="color:var(--muted);">Year</p>
+                    <p class="font-medium" style="color:var(--text);">{{ vehicle.year }}</p>
+                </div>
+                <div>
+                    <p class="font-title text-xs uppercase tracking-widest mb-1" style="color:var(--muted);">Color</p>
+                    <p class="font-medium" style="color:var(--text);">{{ vehicle.color }}</p>
+                </div>
+                <div>
+                    <p class="font-title text-xs uppercase tracking-widest mb-1" style="color:var(--muted);">Engine Number</p>
+                    <p class="font-medium" style="color:var(--text);">{{ vehicle.engine_number }}</p>
+                </div>
+                <div>
+                    <p class="font-title text-xs uppercase tracking-widest mb-1" style="color:var(--muted);">Chassis Number</p>
+                    <p class="font-medium" style="color:var(--text);">{{ vehicle.chassis_number }}</p>
+                </div>
+                <div>
+                    <p class="font-title text-xs uppercase tracking-widest mb-1" style="color:var(--muted);">Submitted</p>
+                    <p class="font-medium" style="color:var(--text);">{{ vehicle.submitted_at|date:"M d, Y H:i" }}</p>
+                </div>
+                <div>
+                    <p class="font-title text-xs uppercase tracking-widest mb-1" style="color:var(--muted);">Current Status</p>
+                    <span class="text-xs px-2 py-0.5 font-title uppercase rounded"
+                        style="{% if vehicle.status == 'approved' %}background:rgba(34,197,94,0.1);color:#4ade80;border:1px solid #4ade80;
+                        {% elif vehicle.status == 'rejected' %}background:rgba(239,68,68,0.1);color:#f87171;border:1px solid #f87171;
+                        {% else %}background:rgba(249,115,22,0.1);color:var(--primary-light);border:1px solid var(--primary-light);{% endif %}">
+                        {{ vehicle.status }}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Panel -->
+    <div class="w-full lg:w-80 flex-shrink-0">
+        <div class="card-auto p-6">
+            <div class="mb-4">
+                <p class="font-title text-xs uppercase tracking-widest mb-1" style="color:var(--primary);">Action</p>
+                <h2 class="font-display font-bold text-base" style="color:var(--text);">MAKE DECISION</h2>
+            </div>
+            <div class="divider-red mb-5"></div>
+
+            <form method="post" class="space-y-4">
+                {% csrf_token %}
+
+                <div>
+                    <label class="font-title text-xs uppercase tracking-widest mb-2 block" style="color:var(--muted);">Remarks (optional)</label>
+                    <textarea name="remarks" rows="4" placeholder="Add review notes..."
+                        style="background:var(--card);border:1px solid var(--border);color:var(--text);border-radius:0.4rem;width:100%;padding:0.75rem 1rem;font-size:0.85rem;outline:none;resize:none;font-family:'Exo 2',sans-serif;"
+                        onfocus="this.style.borderColor='var(--primary)'"
+                        onblur="this.style.borderColor='var(--border)'">{{ vehicle.remarks }}</textarea>
+                </div>
+
+                <button type="submit" name="action" value="approve"
+                    class="w-full py-3 font-title font-bold uppercase tracking-widest text-sm text-white rounded"
+                    style="background:linear-gradient(135deg,#16a34a,#4ade80);width:100%;display:block;border:none;cursor:pointer;transition:opacity 0.2s;"
+                    onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
+                    ✅ Approve Vehicle
+                </button>
+
+                <button type="submit" name="action" value="reject"
+                    class="w-full py-3 font-title font-bold uppercase tracking-widest text-sm text-white rounded"
+                    style="background:linear-gradient(135deg,#dc2626,#f87171);width:100%;display:block;border:none;cursor:pointer;transition:opacity 0.2s;"
+                    onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
+                    ❌ Reject Vehicle
+                </button>
+            </form>
+        </div>
+
+        <!-- Owner Info -->
+        <div class="card-auto p-6 mt-4">
+            <p class="font-title text-xs uppercase tracking-widest mb-4" style="color:var(--primary);">Owner Info</p>
+            <div class="divider-red mb-4"></div>
+            <div class="space-y-2 text-sm">
+                <div>
+                    <p class="font-title text-xs uppercase tracking-widest mb-1" style="color:var(--muted);">Name</p>
+                    <p style="color:var(--text);">{{ vehicle.owner.get_full_name|default:vehicle.owner.username }}</p>
+                </div>
+                <div>
+                    <p class="font-title text-xs uppercase tracking-widest mb-1" style="color:var(--muted);">Email</p>
+                    <p style="color:var(--text);">{{ vehicle.owner.email|default:"Not set" }}</p>
+                </div>
+                <div>
+                    <p class="font-title text-xs uppercase tracking-widest mb-1" style="color:var(--muted);">KYC Status</p>
+                    <span class="text-xs px-2 py-0.5 font-title uppercase rounded"
+                        style="{% if vehicle.owner.profile.kyc_status == 'approved' %}background:rgba(34,197,94,0.1);color:#4ade80;border:1px solid #4ade80;
+                        {% else %}background:rgba(249,115,22,0.1);color:var(--primary-light);border:1px solid var(--primary-light);{% endif %}">
+                        {{ vehicle.owner.profile.kyc_status }}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
