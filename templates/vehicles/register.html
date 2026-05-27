@@ -1,173 +1,399 @@
-{% extends "base.html" %}
-{% block title %}Register Vehicle — VehicleReg{% endblock %}
-
-{% block content %}
+{% extends "base.html" %} {% block title %}Register Vehicle — VehicleReg{%
+endblock %} {% block content %}
 
 <!-- Header -->
 <div class="mb-8">
-    <a href="/dashboard/" class="font-title text-xs uppercase tracking-widest hover:underline" style="color:var(--muted);">← Back to Dashboard</a>
-    <h1 class="font-display font-bold text-2xl sm:text-3xl mt-2" style="color:var(--text);">
-        REGISTER <span style="color:var(--primary);">VEHICLE</span>
-    </h1>
-    <div class="divider-red mt-3 max-w-xs"></div>
+  <a
+    href="/dashboard/"
+    class="font-title text-xs uppercase tracking-widest hover:underline"
+    style="color: var(--muted)"
+    >← Back to Dashboard</a
+  >
+  <h1
+    class="font-display font-bold text-2xl sm:text-3xl mt-2"
+    style="color: var(--text)"
+  >
+    REGISTER <span style="color: var(--primary)">VEHICLE</span>
+  </h1>
+  <div class="divider-red mt-3 max-w-xs"></div>
 </div>
 
 <div class="flex flex-col lg:flex-row gap-6">
+  <!-- Form -->
+  <div class="flex-1">
+    <div class="card-auto p-6 sm:p-8">
+      <div class="mb-6">
+        <p
+          class="font-title text-xs uppercase tracking-widest mb-1"
+          style="color: var(--primary)"
+        >
+          Vehicle Details
+        </p>
+        <h2 class="font-display font-bold text-lg" style="color: var(--text)">
+          SUBMIT DETAILS
+        </h2>
+      </div>
+      <div class="divider-red mb-6"></div>
 
-    <!-- Form -->
-    <div class="flex-1">
-        <div class="card-auto p-6 sm:p-8">
-            <div class="mb-6">
-                <p class="font-title text-xs uppercase tracking-widest mb-1" style="color:var(--primary);">Vehicle Details</p>
-                <h2 class="font-display font-bold text-lg" style="color:var(--text);">SUBMIT DETAILS</h2>
-            </div>
-            <div class="divider-red mb-6"></div>
+      <form method="post" class="space-y-5">
+        {% csrf_token %}
 
-            <form method="post" class="space-y-5">
-                {% csrf_token %}
-
-                <!-- Vehicle Type -->
-                <div>
-                    <label class="font-title text-xs uppercase tracking-widest mb-2 block" style="color:var(--muted);">Vehicle Type</label>
-                    <select name="vehicle_type" required
-                        style="background:var(--card);border:1px solid var(--border);color:var(--text);border-radius:0.4rem;width:100%;padding:0.75rem 1rem;font-size:0.9rem;outline:none;transition:border 0.2s;font-family:'Exo 2',sans-serif;"
-                        onfocus="this.style.borderColor='var(--primary)'"
-                        onblur="this.style.borderColor='var(--border)'">
-                        <option value="">-- Select Type --</option>
-                        <option value="motorcycle">Motorcycle</option>
-                        <option value="car">Car</option>
-                        <option value="jeep">Jeep</option>
-                        <option value="truck">Truck</option>
-                        <option value="bus">Bus</option>
-                        <option value="other">Other</option>
-                    </select>
-                </div>
-
-                <!-- Make + Model -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                        <label class="font-title text-xs uppercase tracking-widests mb-2 block" style="color:var(--muted);">Make (Brand)</label>
-                        <input type="text" name="make" placeholder="e.g. Toyota" required
-                            style="background:transparent;border:1px solid var(--border);color:var(--text);border-radius:0.4rem;width:100%;padding:0.75rem 1rem;font-size:0.9rem;outline:none;transition:border 0.2s;font-family:'Exo 2',sans-serif;"
-                            onfocus="this.style.borderColor='var(--primary)'"
-                            onblur="this.style.borderColor='var(--border)'">
-                    </div>
-                    <div>
-                        <label class="font-title text-xs uppercase tracking-widest mb-2 block" style="color:var(--muted);">Model</label>
-                        <input type="text" name="model" placeholder="e.g. Corolla" required
-                            style="background:transparent;border:1px solid var(--border);color:var(--text);border-radius:0.4rem;width:100%;padding:0.75rem 1rem;font-size:0.9rem;outline:none;transition:border 0.2s;font-family:'Exo 2',sans-serif;"
-                            onfocus="this.style.borderColor='var(--primary)'"
-                            onblur="this.style.borderColor='var(--border)'">
-                    </div>
-                </div>
-
-                <!-- Year + Color -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                        <label class="font-title text-xs uppercase tracking-widest mb-2 block" style="color:var(--muted);">Year</label>
-                        <input type="number" name="year" placeholder="e.g. 2020" min="1990" max="2026" required
-                            style="background:transparent;border:1px solid var(--border);color:var(--text);border-radius:0.4rem;width:100%;padding:0.75rem 1rem;font-size:0.9rem;outline:none;transition:border 0.2s;font-family:'Exo 2',sans-serif;"
-                            onfocus="this.style.borderColor='var(--primary)'"
-                            onblur="this.style.borderColor='var(--border)'">
-                    </div>
-                    <div>
-                        <label class="font-title text-xs uppercase tracking-widest mb-2 block" style="color:var(--muted);">Color</label>
-                        <input type="text" name="color" placeholder="e.g. Red" required
-                            style="background:transparent;border:1px solid var(--border);color:var(--text);border-radius:0.4rem;width:100%;padding:0.75rem 1rem;font-size:0.9rem;outline:none;transition:border 0.2s;font-family:'Exo 2',sans-serif;"
-                            onfocus="this.style.borderColor='var(--primary)'"
-                            onblur="this.style.borderColor='var(--border)'">
-                    </div>
-                </div>
-
-                <!-- Engine + Chassis -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                        <label class="font-title text-xs uppercase tracking-widest mb-2 block" style="color:var(--muted);">Engine Number</label>
-                        <input type="text" name="engine_number" placeholder="e.g. ENG123456" required
-                            style="background:transparent;border:1px solid var(--border);color:var(--text);border-radius:0.4rem;width:100%;padding:0.75rem 1rem;font-size:0.9rem;outline:none;transition:border 0.2s;font-family:'Exo 2',sans-serif;"
-                            onfocus="this.style.borderColor='var(--primary)'"
-                            onblur="this.style.borderColor='var(--border)'">
-                    </div>
-                    <div>
-                        <label class="font-title text-xs uppercase tracking-widest mb-2 block" style="color:var(--muted);">Chassis Number</label>
-                        <input type="text" name="chassis_number" placeholder="e.g. CHS789012" required
-                            style="background:transparent;border:1px solid var(--border);color:var(--text);border-radius:0.4rem;width:100%;padding:0.75rem 1rem;font-size:0.9rem;outline:none;transition:border 0.2s;font-family:'Exo 2',sans-serif;"
-                            onfocus="this.style.borderColor='var(--primary)'"
-                            onblur="this.style.borderColor='var(--border)'">
-                    </div>
-                </div>
-
-                <!-- Errors -->
-                {% if form.errors %}
-                <div style="background:rgba(220,38,38,0.08);border:1px solid rgba(220,38,38,0.2);border-radius:0.4rem;padding:0.75rem 1rem;">
-                    {% for field in form %}
-                        {% for error in field.errors %}
-                            <p class="text-sm" style="color:var(--primary);">⚠ {{ field.label }}: {{ error }}</p>
-                        {% endfor %}
-                    {% endfor %}
-                    {% for error in form.non_field_errors %}
-                        <p class="text-sm" style="color:var(--primary);">⚠ {{ error }}</p>
-                    {% endfor %}
-                </div>
-                {% endif %}
-
-                <button type="submit" class="btn-red w-full py-3 text-center" style="width:100%;display:block;">
-                    Submit Vehicle →
-                </button>
-            </form>
+        <!-- Vehicle Type -->
+        <div>
+          <label
+            class="font-title text-xs uppercase tracking-widest mb-2 block"
+            style="color: var(--muted)"
+            >Vehicle Type</label
+          >
+          <select
+            name="vehicle_type"
+            required
+            style="
+              background: var(--card);
+              border: 1px solid var(--border);
+              color: var(--text);
+              border-radius: 0.4rem;
+              width: 100%;
+              padding: 0.75rem 1rem;
+              font-size: 0.9rem;
+              outline: none;
+              transition: border 0.2s;
+              font-family: &quot;Exo 2&quot;, sans-serif;
+            "
+            onfocus="this.style.borderColor = 'var(--primary)'"
+            onblur="this.style.borderColor = 'var(--border)'"
+          >
+            <option value="">-- Select Type --</option>
+            <option value="motorcycle">Motorcycle</option>
+            <option value="car">Car</option>
+            <option value="jeep">Jeep</option>
+            <option value="truck">Truck</option>
+            <option value="bus">Bus</option>
+            <option value="other">Other</option>
+          </select>
         </div>
+
+        <!-- Make + Model -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label
+              class="font-title text-xs uppercase tracking-widests mb-2 block"
+              style="color: var(--muted)"
+              >Make (Brand)</label
+            >
+            <input
+              type="text"
+              name="make"
+              placeholder="e.g. Toyota"
+              required
+              style="
+                background: transparent;
+                border: 1px solid var(--border);
+                color: var(--text);
+                border-radius: 0.4rem;
+                width: 100%;
+                padding: 0.75rem 1rem;
+                font-size: 0.9rem;
+                outline: none;
+                transition: border 0.2s;
+                font-family: &quot;Exo 2&quot;, sans-serif;
+              "
+              onfocus="this.style.borderColor = 'var(--primary)'"
+              onblur="this.style.borderColor = 'var(--border)'"
+            />
+          </div>
+          <div>
+            <label
+              class="font-title text-xs uppercase tracking-widest mb-2 block"
+              style="color: var(--muted)"
+              >Model</label
+            >
+            <input
+              type="text"
+              name="model"
+              placeholder="e.g. Corolla"
+              required
+              style="
+                background: transparent;
+                border: 1px solid var(--border);
+                color: var(--text);
+                border-radius: 0.4rem;
+                width: 100%;
+                padding: 0.75rem 1rem;
+                font-size: 0.9rem;
+                outline: none;
+                transition: border 0.2s;
+                font-family: &quot;Exo 2&quot;, sans-serif;
+              "
+              onfocus="this.style.borderColor = 'var(--primary)'"
+              onblur="this.style.borderColor = 'var(--border)'"
+            />
+          </div>
+        </div>
+
+        <!-- Year + Color -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label
+              class="font-title text-xs uppercase tracking-widest mb-2 block"
+              style="color: var(--muted)"
+              >Year</label
+            >
+            <input
+              type="number"
+              name="year"
+              placeholder="e.g. 2020"
+              min="1990"
+              max="2026"
+              required
+              style="
+                background: transparent;
+                border: 1px solid var(--border);
+                color: var(--text);
+                border-radius: 0.4rem;
+                width: 100%;
+                padding: 0.75rem 1rem;
+                font-size: 0.9rem;
+                outline: none;
+                transition: border 0.2s;
+                font-family: &quot;Exo 2&quot;, sans-serif;
+              "
+              onfocus="this.style.borderColor = 'var(--primary)'"
+              onblur="this.style.borderColor = 'var(--border)'"
+            />
+          </div>
+          <div>
+            <label
+              class="font-title text-xs uppercase tracking-widest mb-2 block"
+              style="color: var(--muted)"
+              >Color</label
+            >
+            <input
+              type="text"
+              name="color"
+              placeholder="e.g. Red"
+              required
+              style="
+                background: transparent;
+                border: 1px solid var(--border);
+                color: var(--text);
+                border-radius: 0.4rem;
+                width: 100%;
+                padding: 0.75rem 1rem;
+                font-size: 0.9rem;
+                outline: none;
+                transition: border 0.2s;
+                font-family: &quot;Exo 2&quot;, sans-serif;
+              "
+              onfocus="this.style.borderColor = 'var(--primary)'"
+              onblur="this.style.borderColor = 'var(--border)'"
+            />
+          </div>
+        </div>
+
+        <!-- Engine + Chassis -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label
+              class="font-title text-xs uppercase tracking-widest mb-2 block"
+              style="color: var(--muted)"
+              >Engine Number</label
+            >
+            <input
+              type="text"
+              name="engine_number"
+              placeholder="e.g. 2NZ-1234567"
+              required
+              style="
+                background: transparent;
+                border: 1px solid var(--border);
+                color: var(--text);
+                border-radius: 0.4rem;
+                width: 100%;
+                padding: 0.75rem 1rem;
+                font-size: 0.9rem;
+                outline: none;
+                transition: border 0.2s;
+                font-family: &quot;Exo 2&quot;, sans-serif;
+              "
+              onfocus="this.style.borderColor = 'var(--primary)'"
+              onblur="this.style.borderColor = 'var(--border)'"
+            />
+          </div>
+          <div>
+            <label
+              class="font-title text-xs uppercase tracking-widest mb-2 block"
+              style="color: var(--muted)"
+              >Chassis Number</label
+            >
+            <input
+              type="text"
+              name="chassis_number"
+              placeholder="e.g. MA3FJEB1S00123456"
+              required
+              style="
+                background: transparent;
+                border: 1px solid var(--border);
+                color: var(--text);
+                border-radius: 0.4rem;
+                width: 100%;
+                padding: 0.75rem 1rem;
+                font-size: 0.9rem;
+                outline: none;
+                transition: border 0.2s;
+                font-family: &quot;Exo 2&quot;, sans-serif;
+              "
+              onfocus="this.style.borderColor = 'var(--primary)'"
+              onblur="this.style.borderColor = 'var(--border)'"
+            />
+          </div>
+        </div>
+
+        <!-- Errors -->
+        {% if form.errors %}
+        <div
+          style="
+            background: rgba(220, 38, 38, 0.08);
+            border: 1px solid rgba(220, 38, 38, 0.2);
+            border-radius: 0.4rem;
+            padding: 0.75rem 1rem;
+          "
+        >
+          <p
+            class="font-title text-xs uppercase tracking-widest mb-3"
+            style="color: var(--primary)"
+          >
+            Please fix the following errors:
+          </p>
+          {% for field in form %} {% for error in field.errors %}
+          <p class="text-sm mb-1" style="color: var(--primary)">{{ error }}</p>
+          {% endfor %} {% endfor %} {% for error in form.non_field_errors %}
+          <p class="text-sm mb-1" style="color: var(--primary)">{{ error }}</p>
+          {% endfor %}
+        </div>
+        {% endif %}
+
+        <button
+          type="submit"
+          class="btn-red w-full py-3 text-center"
+          style="width: 100%; display: block"
+        >
+          Submit Vehicle →
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Info Panel -->
+  <div class="w-full lg:w-72 flex-shrink-0">
+    <div class="card-auto p-6 mb-4">
+      <p
+        class="font-title text-xs uppercase tracking-widest mb-4"
+        style="color: var(--primary)"
+      >
+        Requirements
+      </p>
+      <div class="divider-red mb-4"></div>
+      <div class="space-y-3 text-sm">
+        <div class="flex items-start gap-2">
+          <span style="color: var(--primary)">✓</span>
+          <p style="color: var(--muted)">
+            KYC must be approved before registering
+          </p>
+        </div>
+        <div class="flex items-start gap-2">
+          <span style="color: var(--primary)">✓</span>
+          <p style="color: var(--muted)">
+            Engine number as printed on engine block (e.g. 2NZ-1234567)
+          </p>
+        </div>
+        <div class="flex items-start gap-2">
+          <span style="color: var(--primary)">✓</span>
+          <p style="color: var(--muted)">
+            Chassis/VIN number max 17 characters (e.g. MA3FJEB1S00123456)
+          </p>
+        </div>
+        <div class="flex items-start gap-2">
+          <span style="color: var(--primary)">✓</span>
+          <p style="color: var(--muted)">Insurance document must be uploaded</p>
+        </div>
+        <div class="flex items-start gap-2">
+          <span style="color: var(--primary)">✓</span>
+          <p style="color: var(--muted)">Tax clearance certificate required</p>
+        </div>
+      </div>
     </div>
 
-    <!-- Info Panel -->
-    <div class="w-full lg:w-72 flex-shrink-0">
-        <div class="card-auto p-6 mb-4">
-            <p class="font-title text-xs uppercase tracking-widest mb-4" style="color:var(--primary);">Requirements</p>
-            <div class="divider-red mb-4"></div>
-            <div class="space-y-3 text-sm">
-                <div class="flex items-start gap-2">
-                    <span style="color:var(--primary);">✓</span>
-                    <p style="color:var(--muted);">KYC must be approved before registering</p>
-                </div>
-                <div class="flex items-start gap-2">
-                    <span style="color:var(--primary);">✓</span>
-                    <p style="color:var(--muted);">Valid engine and chassis numbers required</p>
-                </div>
-                <div class="flex items-start gap-2">
-                    <span style="color:var(--primary);">✓</span>
-                    <p style="color:var(--muted);">Insurance document must be uploaded</p>
-                </div>
-                <div class="flex items-start gap-2">
-                    <span style="color:var(--primary);">✓</span>
-                    <p style="color:var(--muted);">Tax clearance certificate required</p>
-                </div>
-            </div>
+    <div class="card-auto p-6">
+      <p
+        class="font-title text-xs uppercase tracking-widest mb-4"
+        style="color: var(--primary)"
+      >
+        Process
+      </p>
+      <div class="divider-red mb-4"></div>
+      <div class="space-y-3">
+        <div class="flex items-center gap-3">
+          <div
+            style="
+              width: 24px;
+              height: 24px;
+              border-radius: 50%;
+              background: rgba(220, 38, 38, 0.1);
+              border: 1px solid var(--primary);
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              flex-shrink: 0;
+            "
+          >
+            <span class="text-xs" style="color: var(--primary)">1</span>
+          </div>
+          <span class="text-xs font-title uppercase" style="color: var(--muted)"
+            >Submit Details</span
+          >
         </div>
-
-        <div class="card-auto p-6">
-            <p class="font-title text-xs uppercase tracking-widest mb-4" style="color:var(--primary);">Process</p>
-            <div class="divider-red mb-4"></div>
-            <div class="space-y-3">
-                <div class="flex items-center gap-3">
-                    <div style="width:24px;height:24px;border-radius:50%;background:rgba(220,38,38,0.1);border:1px solid var(--primary);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                        <span class="text-xs" style="color:var(--primary);">1</span>
-                    </div>
-                    <span class="text-xs font-title uppercase" style="color:var(--muted);">Submit Details</span>
-                </div>
-                <div class="flex items-center gap-3">
-                    <div style="width:24px;height:24px;border-radius:50%;background:var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                        <span class="text-xs" style="color:var(--muted);">2</span>
-                    </div>
-                    <span class="text-xs font-title uppercase" style="color:var(--muted);">Staff Review</span>
-                </div>
-                <div class="flex items-center gap-3">
-                    <div style="width:24px;height:24px;border-radius:50%;background:var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                        <span class="text-xs" style="color:var(--muted);">3</span>
-                    </div>
-                    <span class="text-xs font-title uppercase" style="color:var(--muted);">Get Approved</span>
-                </div>
-            </div>
+        <div class="flex items-center gap-3">
+          <div
+            style="
+              width: 24px;
+              height: 24px;
+              border-radius: 50%;
+              background: var(--border);
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              flex-shrink: 0;
+            "
+          >
+            <span class="text-xs" style="color: var(--muted)">2</span>
+          </div>
+          <span class="text-xs font-title uppercase" style="color: var(--muted)"
+            >Staff Review</span
+          >
         </div>
+        <div class="flex items-center gap-3">
+          <div
+            style="
+              width: 24px;
+              height: 24px;
+              border-radius: 50%;
+              background: var(--border);
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              flex-shrink: 0;
+            "
+          >
+            <span class="text-xs" style="color: var(--muted)">3</span>
+          </div>
+          <span class="text-xs font-title uppercase" style="color: var(--muted)"
+            >Get Approved</span
+          >
+        </div>
+      </div>
     </div>
+  </div>
 </div>
 
 {% endblock %}

@@ -4,7 +4,8 @@ from users.models import CustomUser
 class KycDocument(models.Model):
     DOCUMENT_TYPE = (
         ('citizenship', 'Citizenship Card'),
-        ('license', 'Driving License'),
+        ('driving_license', 'Driving License'),
+        ('national_id', 'National ID'),
     )
 
     STATUS_CHOICES = (

@@ -1,64 +1,141 @@
-{% extends "base.html" %}
-{% block title %}KYC Review — Staff{% endblock %}
-
-{% block content %}
+{% extends "base.html" %} {% block title %}KYC Review — Staff{% endblock %} {%
+block content %}
 
 <!-- Header -->
 <div class="mb-8">
-    <p class="font-title text-xs uppercase tracking-widest mb-1" style="color:var(--primary);letter-spacing:0.3em;">Staff Panel</p>
-    <h1 class="font-display font-bold text-2xl sm:text-3xl" style="color:var(--text);">
-        KYC <span style="color:var(--primary);">REVIEW</span>
-    </h1>
-    <div class="divider-red mt-3 max-w-xs"></div>
+  <p
+    class="font-title text-xs uppercase tracking-widest mb-1"
+    style="color: var(--primary); letter-spacing: 0.3em"
+  >
+    Staff Panel
+  </p>
+  <h1
+    class="font-display font-bold text-2xl sm:text-3xl"
+    style="color: var(--text)"
+  >
+    KYC <span style="color: var(--primary)">REVIEW</span>
+  </h1>
+  <div class="divider-red mt-3 max-w-xs"></div>
 </div>
 
 <!-- Filter Tabs -->
 <div class="flex flex-wrap gap-2 mb-6">
-    <a href="/staff/kyc/" class="btn-{% if not status_filter %}red{% else %}outline-red{% endif %} text-xs px-4 py-2">All</a>
-    <a href="/staff/kyc/?status=pending" class="btn-{% if status_filter == 'pending' %}red{% else %}outline-red{% endif %} text-xs px-4 py-2">Pending</a>
-    <a href="/staff/kyc/?status=approved" class="btn-{% if status_filter == 'approved' %}red{% else %}outline-red{% endif %} text-xs px-4 py-2">Approved</a>
-    <a href="/staff/kyc/?status=rejected" class="btn-{% if status_filter == 'rejected' %}red{% else %}outline-red{% endif %} text-xs px-4 py-2">Rejected</a>
+  <a
+    href="/staff/kyc/"
+    class="btn-{% if not status_filter %}red{% else %}outline-red{% endif %} text-xs px-4 py-2"
+    >All</a
+  >
+  <a
+    href="/staff/kyc/?status=pending"
+    class="btn-{% if status_filter == 'pending' %}red{% else %}outline-red{% endif %} text-xs px-4 py-2"
+    >Pending</a
+  >
+  <a
+    href="/staff/kyc/?status=approved"
+    class="btn-{% if status_filter == 'approved' %}red{% else %}outline-red{% endif %} text-xs px-4 py-2"
+    >Approved</a
+  >
+  <a
+    href="/staff/kyc/?status=rejected"
+    class="btn-{% if status_filter == 'rejected' %}red{% else %}outline-red{% endif %} text-xs px-4 py-2"
+    >Rejected</a
+  >
 </div>
 
 <!-- Documents Table -->
 <div class="card-auto p-6 sm:p-8">
-    <div class="mb-6">
-        <p class="font-title text-xs uppercase tracking-widest mb-1" style="color:var(--primary);">Documents</p>
-        <h2 class="font-display font-bold text-lg" style="color:var(--text);">ALL SUBMISSIONS</h2>
-    </div>
-    <div class="divider-red mb-6"></div>
+  <div class="mb-6">
+    <p
+      class="font-title text-xs uppercase tracking-widest mb-1"
+      style="color: var(--primary)"
+    >
+      Documents
+    </p>
+    <h2 class="font-display font-bold text-lg" style="color: var(--text)">
+      ALL SUBMISSIONS
+    </h2>
+  </div>
+  <div class="divider-red mb-6"></div>
 
-    {% if documents %}
-    <div class="space-y-3">
-        {% for doc in documents %}
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-lg gap-4" style="background:rgba(220,38,38,0.03);border:1px solid var(--border);">
-            <div class="flex items-center gap-3">
-                <div style="width:40px;height:40px;background:linear-gradient(135deg,var(--primary),var(--primary-light));border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                    <span class="text-white text-lg">{% if doc.document_type == 'citizenship' %}🪪{% else %}🚗{% endif %}</span>
-                </div>
-                <div>
-                    <p class="font-title font-bold text-sm uppercase" style="color:var(--text);">{{ doc.user.username }}</p>
-                    <p class="text-xs" style="color:var(--muted);">{{ doc.get_document_type_display }} · {{ doc.uploaded_at|date:"M d, Y" }}</p>
-                </div>
-            </div>
-            <div class="flex items-center gap-3">
-                <span class="text-xs px-2 py-0.5 font-title uppercase rounded"
-                    style="{% if doc.status == 'approved' %}background:rgba(34,197,94,0.1);color:#4ade80;border:1px solid #4ade80;
-                    {% elif doc.status == 'rejected' %}background:rgba(239,68,68,0.1);color:#f87171;border:1px solid #f87171;
-                    {% else %}background:rgba(249,115,22,0.1);color:var(--primary-light);border:1px solid var(--primary-light);{% endif %}">
-                    {{ doc.status }}
-                </span>
-                <a href="/staff/kyc/{{ doc.id }}/" class="btn-outline-red text-xs px-3 py-1.5">Review →</a>
-            </div>
+  {% if documents %}
+  <div class="space-y-3">
+    {% for doc in documents %}
+    <div
+      class="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-lg gap-4"
+      style="
+        background: rgba(220, 38, 38, 0.03);
+        border: 1px solid var(--border);
+      "
+    >
+      <div class="flex items-center gap-3">
+        <div
+          style="
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(
+              135deg,
+              var(--primary),
+              var(--primary-light)
+            );
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+          "
+        >
+          <span class="text-white text-lg"
+            >{% if doc.document_type == 'citizenship' %}🪪{% else %}🚗{% endif
+            %}</span
+          >
         </div>
-        {% endfor %}
+        <div>
+          <p
+            class="font-title font-bold text-sm uppercase"
+            style="color: var(--text)"
+          >
+            {{ doc.user.username }}
+          </p>
+          <p class="text-xs" style="color: var(--muted)">
+            {{ doc.get_document_type_display }} · {{ doc.uploaded_at|date:"M d,
+            Y" }}
+          </p>
+          {% if doc.is_flagged %}
+          <p class="text-xs mt-1 font-title uppercase" style="color: #f87171">
+            ⚠ Flagged: Possible Duplicate
+          </p>
+          {% endif %}
+        </div>
+      </div>
+      <div class="flex items-center gap-3">
+        <span
+          class="text-xs px-2 py-0.5 font-title uppercase rounded"
+          style="{% if doc.status == 'approved' %}background:rgba(34,197,94,0.1);color:#4ade80;border:1px solid #4ade80;
+                    {% elif doc.status == 'rejected' %}background:rgba(239,68,68,0.1);color:#f87171;border:1px solid #f87171;
+                    {% else %}background:rgba(249,115,22,0.1);color:var(--primary-light);border:1px solid var(--primary-light);{% endif %}"
+        >
+          {{ doc.status }}
+        </span>
+        <a
+          href="/staff/kyc/{{ doc.id }}/"
+          class="btn-outline-red text-xs px-3 py-1.5"
+          >Review →</a
+        >
+      </div>
     </div>
-    {% else %}
-    <div class="text-center py-12">
-        <span style="font-size:3rem">📂</span>
-        <p class="font-title uppercase tracking-widest text-sm mt-3" style="color:var(--muted);">No documents found</p>
-    </div>
-    {% endif %}
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="text-center py-12">
+    <span style="font-size: 3rem">📂</span>
+    <p
+      class="font-title uppercase tracking-widest text-sm mt-3"
+      style="color: var(--muted)"
+    >
+      No documents found
+    </p>
+  </div>
+  {% endif %}
 </div>
 
 {% endblock %}

@@ -23,6 +23,24 @@
             </div>
             <div class="divider-red mb-6"></div>
 
+            {% if has_pending %}
+            <!-- Pending Warning -->
+            <div style="background:rgba(249,115,22,0.08);border:1px solid rgba(249,115,22,0.2);border-radius:0.4rem;padding:1.5rem;text-align:center;">
+                <p style="font-size:2rem;margin-bottom:0.5rem;">⏳</p>
+                <p class="font-title font-bold uppercase tracking-widest text-sm mb-1" style="color:var(--primary-light);">Document Pending Review</p>
+                <p class="text-xs" style="color:var(--muted);">Your document is currently being reviewed by staff. You cannot upload new documents until it is approved or rejected.</p>
+            </div>
+
+            {% elif all_uploaded %}
+            <!-- All Uploaded -->
+            <div style="background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.2);border-radius:0.4rem;padding:1.5rem;text-align:center;">
+                <p style="font-size:2rem;margin-bottom:0.5rem;">✅</p>
+                <p class="font-title font-bold uppercase tracking-widest text-sm mb-1" style="color:#4ade80;">All Documents Uploaded!</p>
+                <p class="text-xs" style="color:var(--muted);">All required documents have been submitted. Awaiting staff review.</p>
+            </div>
+
+            {% else %}
+            <!-- Upload Form -->
             <form method="post" enctype="multipart/form-data" class="space-y-5">
                 {% csrf_token %}
 
@@ -34,8 +52,15 @@
                         onfocus="this.style.borderColor='var(--primary)'"
                         onblur="this.style.borderColor='var(--border)'">
                         <option value="">-- Select Document Type --</option>
-                        <option value="citizenship">Citizenship Card</option>
-                        <option value="license">Driving License</option>
+                        <option value="citizenship" {% if 'citizenship' in uploaded_types %}disabled{% endif %}>
+                            🪪 Citizenship Card {% if 'citizenship' in uploaded_types %}(Already Uploaded){% endif %}
+                        </option>
+                        <option value="driving_license" {% if 'driving_license' in uploaded_types %}disabled{% endif %}>
+                            🚗 Driving License {% if 'driving_license' in uploaded_types %}(Already Uploaded){% endif %}
+                        </option>
+                        <option value="national_id" {% if 'national_id' in uploaded_types %}disabled{% endif %}>
+                            🪪 National ID {% if 'national_id' in uploaded_types %}(Already Uploaded){% endif %}
+                        </option>
                     </select>
                 </div>
 
@@ -56,10 +81,23 @@
                         onchange="document.getElementById('file-name').textContent = this.files[0]?.name || ''">
                 </div>
 
+                <!-- Form Errors -->
+                {% if form.errors %}
+                <div style="background:rgba(220,38,38,0.08);border:1px solid rgba(220,38,38,0.2);border-radius:0.4rem;padding:0.75rem 1rem;">
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                            <p class="text-sm mb-1" style="color:var(--primary);">{{ error }}</p>
+                        {% endfor %}
+                    {% endfor %}
+                </div>
+                {% endif %}
+
                 <button type="submit" class="btn-red w-full py-3 text-center" style="width:100%;display:block;">
                     Upload Document →
                 </button>
             </form>
+            {% endif %}
+
         </div>
     </div>
 
@@ -73,37 +111,39 @@
             <div class="divider-red mb-4"></div>
 
             {% if existing_docs %}
-                <div class="space-y-3">
+            <div class="space-y-3">
                 {% for doc in existing_docs %}
-                    <div class="p-4 rounded-lg" style="background:rgba(220,38,38,0.03);border:1px solid var(--border);">
-                        <div class="flex items-center justify-between mb-2">
-                            <span class="font-title text-xs uppercase tracking-wide font-bold" style="color:var(--text);">
-                                {% if doc.document_type == 'citizenship' %}🪪 Citizenship
-                                {% else %}🚗 License{% endif %}
-                            </span>
-                            <span class="text-xs px-2 py-0.5 font-title uppercase rounded"
-                                style="{% if doc.status == 'approved' %}background:rgba(34,197,94,0.1);color:#4ade80;border:1px solid #4ade80;
-                                {% elif doc.status == 'rejected' %}background:rgba(239,68,68,0.1);color:#f87171;border:1px solid #f87171;
-                                {% else %}background:rgba(249,115,22,0.1);color:var(--primary-light);border:1px solid var(--primary-light);{% endif %}">
-                                {{ doc.status }}
-                            </span>
-                        </div>
-                        <p class="text-xs" style="color:var(--muted);">{{ doc.uploaded_at|date:"M d, Y" }}</p>
-                        {% if doc.remarks %}
-                        <p class="text-xs mt-2 italic" style="color:var(--muted);">{{ doc.remarks }}</p>
-                        {% endif %}
+                <div class="p-4 rounded-lg" style="background:rgba(220,38,38,0.03);border:1px solid var(--border);">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="font-title text-xs uppercase tracking-wide font-bold" style="color:var(--text);">
+                            {% if doc.document_type == 'citizenship' %}🪪 Citizenship
+                            {% elif doc.document_type == 'driving_license' %}🚗 Driving License
+                            {% else %}🪪 National ID{% endif %}
+                        </span>
+                        <span class="text-xs px-2 py-0.5 font-title uppercase rounded"
+                            style="{% if doc.status == 'approved' %}background:rgba(34,197,94,0.1);color:#4ade80;border:1px solid #4ade80;
+                            {% elif doc.status == 'rejected' %}background:rgba(239,68,68,0.1);color:#f87171;border:1px solid #f87171;
+                            {% else %}background:rgba(249,115,22,0.1);color:var(--primary-light);border:1px solid var(--primary-light);{% endif %}">
+                            {{ doc.status }}
+                        </span>
                     </div>
+                    <p class="text-xs" style="color:var(--muted);">{{ doc.uploaded_at|date:"M d, Y" }}</p>
+                    {% if doc.remarks %}
+                    <p class="text-xs mt-2 italic" style="color:var(--muted);">{{ doc.remarks }}</p>
+                    {% endif %}
+                </div>
                 {% endfor %}
-                </div>
+            </div>
             {% else %}
-                <div class="text-center py-8">
-                    <span style="font-size:2.5rem">📂</span>
-                    <p class="font-title uppercase tracking-widest text-xs mt-3" style="color:var(--muted);">No documents uploaded yet</p>
-                </div>
+            <div class="text-center py-8">
+                <span style="font-size:2.5rem">📂</span>
+                <p class="font-title uppercase tracking-widest text-xs mt-3" style="color:var(--muted);">No documents uploaded yet</p>
+            </div>
             {% endif %}
         </div>
     </div>
 </div>
+
 <!-- OCR Results -->
 {% if ocr_data %}
 <div class="card-auto p-6 sm:p-8 mt-6">
