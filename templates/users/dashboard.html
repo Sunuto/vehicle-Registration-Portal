@@ -194,7 +194,17 @@
                     <p class="font-title text-xs uppercase tracking-widest mb-1" style="color:var(--primary);">Fleet</p>
                     <h2 class="font-display font-bold text-lg" style="color:var(--text);">MY VEHICLES</h2>
                 </div>
-                <a href="/vehicles/register/" class="btn-red text-xs px-4 py-2">+ Register</a>
+                {% if not vehicles %}
+                    <a href="/vehicles/register/" class="btn-red text-xs px-4 py-2">+ Register</a>
+                {% else %}
+                    {% with latest=vehicles.0 %}
+                        {% if latest.status == 'pending' %}
+                            <span class="text-xs font-title uppercase" style="color:var(--primary-light);">⏳ Pending</span>
+                        {% else %}
+                            <a href="/vehicles/register/" class="btn-red text-xs px-4 py-2">+ Register</a>
+                        {% endif %}
+                    {% endwith %}
+                {% endif %}
             </div>
             <div class="divider-red mb-6"></div>
 

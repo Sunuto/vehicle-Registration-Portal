@@ -1,113 +1,259 @@
-{% extends "base.html" %}
-{% block title %}Review Document — Staff{% endblock %}
-
+{% extends "base.html" %} {% block title %}Review Document — Staff{% endblock %}
 {% block content %}
 
 <!-- Header -->
 <div class="mb-8">
-    <a href="/staff/kyc/" class="font-title text-xs uppercase tracking-widest hover:underline" style="color:var(--muted);">← Back to KYC List</a>
-    <h1 class="font-display font-bold text-2xl sm:text-3xl mt-2" style="color:var(--text);">
-        REVIEW <span style="color:var(--primary);">DOCUMENT</span>
-    </h1>
-    <div class="divider-red mt-3 max-w-xs"></div>
+  <a
+    href="/staff/kyc/"
+    class="font-title text-xs uppercase tracking-widest hover:underline"
+    style="color: var(--muted)"
+    >← Back to KYC List</a
+  >
+  <h1
+    class="font-display font-bold text-2xl sm:text-3xl mt-2"
+    style="color: var(--text)"
+  >
+    REVIEW <span style="color: var(--primary)">DOCUMENT</span>
+  </h1>
+  <div class="divider-red mt-3 max-w-xs"></div>
 </div>
 
 <div class="flex flex-col lg:flex-row gap-6">
+  <!-- Document Preview -->
+  <div class="flex-1">
+    <div class="card-auto p-6 sm:p-8 mb-6">
+      <div class="mb-6">
+        <p
+          class="font-title text-xs uppercase tracking-widest mb-1"
+          style="color: var(--primary)"
+        >
+          Document
+        </p>
+        <h2 class="font-display font-bold text-lg" style="color: var(--text)">
+          {{ doc.get_document_type_display|upper }}
+        </h2>
+      </div>
+      <div class="divider-red mb-6"></div>
 
-    <!-- Document Preview -->
-    <div class="flex-1">
-        <div class="card-auto p-6 sm:p-8 mb-6">
-            <div class="mb-6">
-                <p class="font-title text-xs uppercase tracking-widest mb-1" style="color:var(--primary);">Document</p>
-                <h2 class="font-display font-bold text-lg" style="color:var(--text);">{{ doc.get_document_type_display|upper }}</h2>
-            </div>
-            <div class="divider-red mb-6"></div>
+      <!-- Document Image -->
+      <div
+        class="mb-6 rounded-lg overflow-hidden"
+        style="border: 1px solid var(--border)"
+      >
+        <img
+          src="{{ doc.document_image.url }}"
+          alt="Document"
+          class="w-full object-contain"
+          style="max-height: 400px"
+        />
+      </div>
 
-            <!-- Document Image -->
-            <div class="mb-6 rounded-lg overflow-hidden" style="border:1px solid var(--border);">
-                <img src="{{ doc.document_image.url }}" alt="Document" class="w-full object-contain" style="max-height:400px;">
-            </div>
-
-            <!-- Doc Info -->
-            <div class="grid grid-cols-2 gap-4 text-sm">
-                <div>
-                    <p class="font-title text-xs uppercase tracking-widest mb-1" style="color:var(--muted);">User</p>
-                    <p class="font-medium" style="color:var(--text);">{{ doc.user.username }}</p>
-                </div>
-                <div>
-                    <p class="font-title text-xs uppercase tracking-widest mb-1" style="color:var(--muted);">Document Type</p>
-                    <p class="font-medium" style="color:var(--text);">{{ doc.get_document_type_display }}</p>
-                </div>
-                <div>
-                    <p class="font-title text-xs uppercase tracking-widest mb-1" style="color:var(--muted);">Uploaded</p>
-                    <p class="font-medium" style="color:var(--text);">{{ doc.uploaded_at|date:"M d, Y H:i" }}</p>
-                </div>
-                <div>
-                    <p class="font-title text-xs uppercase tracking-widest mb-1" style="color:var(--muted);">Current Status</p>
-                    <span class="text-xs px-2 py-0.5 font-title uppercase rounded"
-                        style="{% if doc.status == 'approved' %}background:rgba(34,197,94,0.1);color:#4ade80;border:1px solid #4ade80;
+      <!-- Doc Info -->
+      <div class="grid grid-cols-2 gap-4 text-sm">
+        <div>
+          <p
+            class="font-title text-xs uppercase tracking-widest mb-1"
+            style="color: var(--muted)"
+          >
+            User
+          </p>
+          <p class="font-medium" style="color: var(--text)">
+            {{ doc.user.username }}
+          </p>
+        </div>
+        <div>
+          <p
+            class="font-title text-xs uppercase tracking-widest mb-1"
+            style="color: var(--muted)"
+          >
+            Document Type
+          </p>
+          <p class="font-medium" style="color: var(--text)">
+            {{ doc.get_document_type_display }}
+          </p>
+        </div>
+        <div>
+          <p
+            class="font-title text-xs uppercase tracking-widest mb-1"
+            style="color: var(--muted)"
+          >
+            Uploaded
+          </p>
+          <p class="font-medium" style="color: var(--text)">
+            {{ doc.uploaded_at|date:"M d, Y H:i" }}
+          </p>
+        </div>
+        <div>
+          <p
+            class="font-title text-xs uppercase tracking-widest mb-1"
+            style="color: var(--muted)"
+          >
+            Current Status
+          </p>
+          <span
+            class="text-xs px-2 py-0.5 font-title uppercase rounded"
+            style="{% if doc.status == 'approved' %}background:rgba(34,197,94,0.1);color:#4ade80;border:1px solid #4ade80;
                         {% elif doc.status == 'rejected' %}background:rgba(239,68,68,0.1);color:#f87171;border:1px solid #f87171;
-                        {% else %}background:rgba(249,115,22,0.1);color:var(--primary-light);border:1px solid var(--primary-light);{% endif %}">
-                        {{ doc.status }}
-                    </span>
-                </div>
-                {% if doc.reviewed_by %}
-                <div>
-                    <p class="font-title text-xs uppercase tracking-widest mb-1" style="color:var(--muted);">Reviewed By</p>
-                    <p class="font-medium" style="color:var(--text);">{{ doc.reviewed_by.username }}</p>
-                </div>
-                <div>
-                    <p class="font-title text-xs uppercase tracking-widest mb-1" style="color:var(--muted);">Reviewed At</p>
-                    <p class="font-medium" style="color:var(--text);">{{ doc.reviewed_at|date:"M d, Y H:i" }}</p>
-                </div>
-                {% endif %}
-            </div>
+                        {% else %}background:rgba(249,115,22,0.1);color:var(--primary-light);border:1px solid var(--primary-light);{% endif %}"
+          >
+            {{ doc.status }}
+          </span>
         </div>
-    </div>
-
-    <!-- Action Panel -->
-    <div class="w-full lg:w-80 flex-shrink-0">
-        <div class="card-auto p-6">
-            <div class="mb-4">
-                <p class="font-title text-xs uppercase tracking-widest mb-1" style="color:var(--primary);">Action</p>
-                <h2 class="font-display font-bold text-base" style="color:var(--text);">MAKE DECISION</h2>
-            </div>
-            <div class="divider-red mb-5"></div>
-
-            <form method="post" class="space-y-4">
-                {% csrf_token %}
-
-                <div>
-                    <label class="font-title text-xs uppercase tracking-widest mb-2 block" style="color:var(--muted);">Remarks (optional)</label>
-                    <textarea name="remarks" rows="4" placeholder="Add review notes..."
-                        style="background:var(--card);border:1px solid var(--border);color:var(--text);border-radius:0.4rem;width:100%;padding:0.75rem 1rem;font-size:0.85rem;outline:none;resize:none;font-family:'Exo 2',sans-serif;"
-                        onfocus="this.style.borderColor='var(--primary)'"
-                        onblur="this.style.borderColor='var(--border)'">{{ doc.remarks }}</textarea>
-                </div>
-
-                <button type="submit" name="action" value="approve"
-                    class="w-full py-3 text-center font-title font-bold uppercase tracking-widest text-sm text-white rounded"
-                    style="background:linear-gradient(135deg,#16a34a,#4ade80);width:100%;display:block;border:none;cursor:pointer;transition:opacity 0.2s;"
-                    onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
-                    ✅ Approve Document
-                </button>
-
-                <button type="submit" name="action" value="reject"
-                    class="w-full py-3 text-center font-title font-bold uppercase tracking-widest text-sm text-white rounded"
-                    style="background:linear-gradient(135deg,#dc2626,#f87171);width:100%;display:block;border:none;cursor:pointer;transition:opacity 0.2s;"
-                    onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
-                    ❌ Reject Document
-                </button>
-            </form>
-
-            {% if doc.remarks %}
-            <div class="mt-4 p-3 rounded" style="background:rgba(220,38,38,0.05);border:1px solid var(--border);">
-                <p class="font-title text-xs uppercase tracking-widest mb-1" style="color:var(--muted);">Previous Remarks</p>
-                <p class="text-sm italic" style="color:var(--text);">{{ doc.remarks }}</p>
-            </div>
-            {% endif %}
+        {% if doc.reviewed_by %}
+        <div>
+          <p
+            class="font-title text-xs uppercase tracking-widest mb-1"
+            style="color: var(--muted)"
+          >
+            Reviewed By
+          </p>
+          <p class="font-medium" style="color: var(--text)">
+            {{ doc.reviewed_by.username }}
+          </p>
         </div>
+        <div>
+          <p
+            class="font-title text-xs uppercase tracking-widest mb-1"
+            style="color: var(--muted)"
+          >
+            Reviewed At
+          </p>
+          <p class="font-medium" style="color: var(--text)">
+            {{ doc.reviewed_at|date:"M d, Y H:i" }}
+          </p>
+        </div>
+        {% endif %}
+
+        <!-- Fraud Alert -->
+        {% if doc.is_flagged %}
+        <div
+          class="col-span-2 p-4 rounded-lg"
+          style="
+            background: rgba(239, 68, 68, 0.08);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+          "
+        >
+          <p
+            class="font-title text-xs uppercase tracking-widest mb-1"
+            style="color: #f87171"
+          >
+            ⚠ Fraud Alert
+          </p>
+          <p class="text-sm" style="color: #f87171">{{ doc.flag_reason }}</p>
+        </div>
+        {% endif %}
+      </div>
     </div>
+  </div>
+
+  <!-- Action Panel -->
+  <div class="w-full lg:w-80 flex-shrink-0">
+    <div class="card-auto p-6">
+      <div class="mb-4">
+        <p
+          class="font-title text-xs uppercase tracking-widest mb-1"
+          style="color: var(--primary)"
+        >
+          Action
+        </p>
+        <h2 class="font-display font-bold text-base" style="color: var(--text)">
+          MAKE DECISION
+        </h2>
+      </div>
+      <div class="divider-red mb-5"></div>
+
+      <form method="post" class="space-y-4">
+        {% csrf_token %}
+
+        <div>
+          <label
+            class="font-title text-xs uppercase tracking-widest mb-2 block"
+            style="color: var(--muted)"
+            >Remarks (optional)</label
+          >
+          <textarea
+            name="remarks"
+            rows="4"
+            placeholder="Add review notes..."
+            style="
+              background: var(--card);
+              border: 1px solid var(--border);
+              color: var(--text);
+              border-radius: 0.4rem;
+              width: 100%;
+              padding: 0.75rem 1rem;
+              font-size: 0.85rem;
+              outline: none;
+              resize: none;
+              font-family: &quot;Exo 2&quot;, sans-serif;
+            "
+            onfocus="this.style.borderColor = 'var(--primary)'"
+            onblur="this.style.borderColor = 'var(--border)'"
+          >
+{{ doc.remarks }}</textarea
+          >
+        </div>
+
+        <button
+          type="submit"
+          name="action"
+          value="approve"
+          class="w-full py-3 text-center font-title font-bold uppercase tracking-widest text-sm text-white rounded"
+          style="
+            background: linear-gradient(135deg, #16a34a, #4ade80);
+            width: 100%;
+            display: block;
+            border: none;
+            cursor: pointer;
+            transition: opacity 0.2s;
+          "
+          onmouseover="this.style.opacity = '0.9'"
+          onmouseout="this.style.opacity = '1'"
+        >
+          ✅ Approve Document
+        </button>
+
+        <button
+          type="submit"
+          name="action"
+          value="reject"
+          class="w-full py-3 text-center font-title font-bold uppercase tracking-widest text-sm text-white rounded"
+          style="
+            background: linear-gradient(135deg, #dc2626, #f87171);
+            width: 100%;
+            display: block;
+            border: none;
+            cursor: pointer;
+            transition: opacity 0.2s;
+          "
+          onmouseover="this.style.opacity = '0.9'"
+          onmouseout="this.style.opacity = '1'"
+        >
+          ❌ Reject Document
+        </button>
+      </form>
+
+      {% if doc.remarks %}
+      <div
+        class="mt-4 p-3 rounded"
+        style="
+          background: rgba(220, 38, 38, 0.05);
+          border: 1px solid var(--border);
+        "
+      >
+        <p
+          class="font-title text-xs uppercase tracking-widest mb-1"
+          style="color: var(--muted)"
+        >
+          Previous Remarks
+        </p>
+        <p class="text-sm italic" style="color: var(--text)">
+          {{ doc.remarks }}
+        </p>
+      </div>
+      {% endif %}
+    </div>
+  </div>
 </div>
 
 {% endblock %}
