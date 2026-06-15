@@ -21,14 +21,20 @@ class KycUploadForm(forms.ModelForm):
         if document_type not in valid_types:
             raise ValidationError('⚠ Invalid document type. Only Citizenship Card, Driving License or National ID allowed.')
 
-        # Check if user already uploaded this document type
         if self.user:
+            # Block if ANY document is already approved
+            if KycDocument.objects.filter(user=self.user, status='approved').exists():
+                raise ValidationError('⚠ Your KYC is already approved. No further uploads needed.')
+
+            # Block same type if pending or approved
             existing = KycDocument.objects.filter(
                 user=self.user,
-                document_type=document_type
-            ).exclude(status='rejected')
+                document_type=document_type,
+                status__in=['pending', 'approved']
+            )
             if existing.exists():
-                raise ValidationError(f'⚠ You have already uploaded a {dict(KycDocument.DOCUMENT_TYPE)[document_type]}. Please wait for review or upload a different document type.')
+                type_label = dict(KycDocument.DOCUMENT_TYPE)[document_type]
+                raise ValidationError(f'⚠ You already have a {type_label} that is pending or approved.')
 
         return document_type
 

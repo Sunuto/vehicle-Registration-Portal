@@ -29,9 +29,16 @@
             
             <!-- User Info -->
             <div class="flex items-center gap-3">
+                {% if u.profile.profile_picture %}
+                <img src="{{ u.profile.profile_picture.url }}" alt="{{ u.username }}"
+                 style="width:40px;height:40px;border-radius:6px;object-fit:cover;border:1px solid var(--border);flex-shrink:0;">
+               
+                {% else %}
                 <div style="width:40px;height:40px;background:linear-gradient(135deg,var(--primary),var(--primary-light));border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                    <span class="font-display font-bold text-sm text-white">{{ u.username|first|upper }}</span>
+                <span class="font-display font-bold text-sm text-white">{{ u.username|first|upper }}</span>
                 </div>
+                {% endif %}
+               
                 <div>
                     <p class="font-title font-bold text-sm uppercase" style="color:var(--text);">{{ u.get_full_name|default:u.username }}</p>
                     <p class="text-xs" style="color:var(--muted);">{{ u.email|default:"No email" }} · Joined {{ u.date_joined|date:"M d, Y" }}</p>

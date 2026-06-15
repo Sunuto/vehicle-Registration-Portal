@@ -22,86 +22,87 @@
                 <h2 class="font-display font-bold text-lg" style="color:var(--text);">SUBMIT DOCUMENT</h2>
             </div>
             <div class="divider-red mb-6"></div>
-    {% if has_pending %}
-    <!-- Pending Warning -->
-    <div style="background:rgba(249,115,22,0.08);border:1px solid rgba(249,115,22,0.2);border-radius:0.4rem;padding:1.5rem;text-align:center;">
-    <p style="font-size:2rem;margin-bottom:0.5rem;">⏳</p>
-    <p class="font-title font-bold uppercase tracking-widest text-sm mb-1" style="color:var(--primary-light);">Document Pending Review</p>
-    <p class="text-xs" style="color:var(--muted);">Your document is being reviewed by staff. You cannot upload until it is approved or rejected.</p>
-    </div>
 
-    {% elif all_uploaded and has_approved %}
-    <!-- All Approved -->
-    <div style="background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.2);border-radius:0.4rem;padding:1.5rem;text-align:center;">
-    <p style="font-size:2rem;margin-bottom:0.5rem;">✅</p>
-    <p class="font-title font-bold uppercase tracking-widest text-sm mb-1" style="color:#4ade80;">KYC Complete!</p>
-    <p class="text-xs" style="color:var(--muted);">All your documents have been approved. Your KYC is complete.</p>
-    <a href="/dashboard/" class="btn-red inline-block mt-4 px-6 py-2 text-xs">Go to Dashboard →</a>
-    </div>
+            {% if block_reason == 'approved' %}
+            <!-- Already Approved -->
+            <div style="background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.2);border-radius:0.4rem;padding:1.5rem;text-align:center;">
+                <p style="font-size:2rem;margin-bottom:0.5rem;">✅</p>
+                <p class="font-title font-bold uppercase tracking-widest text-sm mb-1" style="color:#4ade80;">KYC Already Approved!</p>
+                <p class="text-xs" style="color:var(--muted);">Your KYC document has been approved. No further uploads are needed.</p>
+                <a href="/dashboard/" class="btn-red inline-block mt-4 px-6 py-2 text-xs">Go to Dashboard →</a>
+            </div>
 
-    {% elif all_uploaded %}
-    <!-- All Uploaded but not yet approved -->
-    <div style="background:rgba(59,130,246,0.08);border:1px solid rgba(59,130,246,0.2);border-radius:0.4rem;padding:1.5rem;text-align:center;">
-    <p style="font-size:2rem;margin-bottom:0.5rem;">📋</p>
-    <p class="font-title font-bold uppercase tracking-widest text-sm mb-1" style="color:#60a5fa;">All Documents Submitted!</p>
-    <p class="text-xs" style="color:var(--muted);">All documents submitted. Awaiting staff review.</p>
-    </div>
+            {% elif block_reason == 'pending' %}
+            <!-- Pending -->
+            <div style="background:rgba(249,115,22,0.08);border:1px solid rgba(249,115,22,0.2);border-radius:0.4rem;padding:1.5rem;text-align:center;">
+                <p style="font-size:2rem;margin-bottom:0.5rem;">⏳</p>
+                <p class="font-title font-bold uppercase tracking-widest text-sm mb-1" style="color:var(--primary-light);">Document Pending Review</p>
+                <p class="text-xs" style="color:var(--muted);">Your document is being reviewed by staff. You cannot upload until it is approved or rejected.</p>
+            </div>
 
-    {% else %}
-    <!-- Upload Form -->
-    <form method="post" enctype="multipart/form-data" class="space-y-5">
-    {% csrf_token %}
+            {% elif all_uploaded %}
+            <!-- All Uploaded but not yet approved -->
+            <div style="background:rgba(59,130,246,0.08);border:1px solid rgba(59,130,246,0.2);border-radius:0.4rem;padding:1.5rem;text-align:center;">
+                <p style="font-size:2rem;margin-bottom:0.5rem;">📋</p>
+                <p class="font-title font-bold uppercase tracking-widest text-sm mb-1" style="color:#60a5fa;">All Documents Submitted!</p>
+                <p class="text-xs" style="color:var(--muted);">All documents submitted. Awaiting staff review.</p>
+            </div>
 
-    <div>
-        <label class="font-title text-xs uppercase tracking-widest mb-2 block" style="color:var(--muted);">Document Type</label>
-        <select name="document_type" required
-            style="background:var(--card);border:1px solid var(--border);color:var(--text);border-radius:0.4rem;width:100%;padding:0.75rem 1rem;font-size:0.9rem;outline:none;transition:border 0.2s;font-family:'Exo 2',sans-serif;"
-            onfocus="this.style.borderColor='var(--primary)'"
-            onblur="this.style.borderColor='var(--border)'">
-            <option value="">-- Select Document Type --</option>
-            <option value="citizenship" {% if 'citizenship' in uploaded_types %}disabled{% endif %}>
-                🪪 Citizenship Card {% if 'citizenship' in uploaded_types %}(Already Uploaded){% endif %}
-            </option>
-            <option value="driving_license" {% if 'driving_license' in uploaded_types %}disabled{% endif %}>
-                🚗 Driving License {% if 'driving_license' in uploaded_types %}(Already Uploaded){% endif %}
-            </option>
-            <option value="national_id" {% if 'national_id' in uploaded_types %}disabled{% endif %}>
-                🪪 National ID {% if 'national_id' in uploaded_types %}(Already Uploaded){% endif %}
-            </option>
-        </select>
-    </div>
+            {% else %}
+            <!-- Upload Form -->
+            <form method="post" enctype="multipart/form-data" class="space-y-5">
+                {% csrf_token %}
 
-    <div>
-        <label class="font-title text-xs uppercase tracking-widest mb-2 block" style="color:var(--muted);">Document Image</label>
-        <div style="border:2px dashed var(--border);border-radius:0.4rem;padding:2rem;text-align:center;transition:border 0.2s;cursor:pointer;"
-            onclick="document.getElementById('file-input').click()"
-            ondragover="this.style.borderColor='var(--primary)'"
-            ondragleave="this.style.borderColor='var(--border)'">
-            <div style="font-size:2.5rem;margin-bottom:0.5rem">📎</div>
-            <p class="font-title uppercase tracking-widest text-sm mb-1" style="color:var(--text);">Click to upload</p>
-            <p class="text-xs" style="color:var(--muted);">JPG, PNG supported — Max 5MB</p>
-            <p class="text-xs mt-2 font-medium" id="file-name" style="color:var(--primary);"></p>
-        </div>
-        <input type="file" name="document_image" id="file-input" accept="image/*" required
-            style="display:none;"
-            onchange="document.getElementById('file-name').textContent = this.files[0]?.name || ''">
-    </div>
+                <div>
+                    <label class="font-title text-xs uppercase tracking-widest mb-2 block" style="color:var(--muted);">Document Type</label>
+                    <select name="document_type" required
+                        style="background:var(--card);border:1px solid var(--border);color:var(--text);border-radius:0.4rem;width:100%;padding:0.75rem 1rem;font-size:0.9rem;outline:none;transition:border 0.2s;font-family:'Exo 2',sans-serif;"
+                        onfocus="this.style.borderColor='var(--primary)'"
+                        onblur="this.style.borderColor='var(--border)'">
+                        <option value="">-- Select Document Type --</option>
+                        <option value="citizenship" {% if 'citizenship' in uploaded_types %}disabled{% endif %}>
+                            🪪 Citizenship Card {% if 'citizenship' in uploaded_types %}(Already Uploaded){% endif %}
+                        </option>
+                        <option value="driving_license" {% if 'driving_license' in uploaded_types %}disabled{% endif %}>
+                            🚗 Driving License {% if 'driving_license' in uploaded_types %}(Already Uploaded){% endif %}
+                        </option>
+                        <option value="national_id" {% if 'national_id' in uploaded_types %}disabled{% endif %}>
+                            🪪 National ID {% if 'national_id' in uploaded_types %}(Already Uploaded){% endif %}
+                        </option>
+                    </select>
+                </div>
 
-    {% if form.errors %}
-    <div style="background:rgba(220,38,38,0.08);border:1px solid rgba(220,38,38,0.2);border-radius:0.4rem;padding:0.75rem 1rem;">
-        {% for field in form %}
-            {% for error in field.errors %}
-                <p class="text-sm mb-1" style="color:var(--primary);">{{ error }}</p>
-            {% endfor %}
-        {% endfor %}
-    </div>
-    {% endif %}
+                <div>
+                    <label class="font-title text-xs uppercase tracking-widest mb-2 block" style="color:var(--muted);">Document Image</label>
+                    <div style="border:2px dashed var(--border);border-radius:0.4rem;padding:2rem;text-align:center;transition:border 0.2s;cursor:pointer;"
+                        onclick="document.getElementById('file-input').click()"
+                        ondragover="this.style.borderColor='var(--primary)'"
+                        ondragleave="this.style.borderColor='var(--border)'">
+                        <div style="font-size:2.5rem;margin-bottom:0.5rem">📎</div>
+                        <p class="font-title uppercase tracking-widest text-sm mb-1" style="color:var(--text);">Click to upload</p>
+                        <p class="text-xs" style="color:var(--muted);">JPG, PNG supported — Max 5MB</p>
+                        <p class="text-xs mt-2 font-medium" id="file-name" style="color:var(--primary);"></p>
+                    </div>
+                    <input type="file" name="document_image" id="file-input" accept="image/*" required
+                        style="display:none;"
+                        onchange="document.getElementById('file-name').textContent = this.files[0]?.name || ''">
+                </div>
 
-    <button type="submit" class="btn-red w-full py-3 text-center" style="width:100%;display:block;">
-        Upload Document →
-    </button>
-    </form>
-    {% endif %}
+                {% if form.errors %}
+                <div style="background:rgba(220,38,38,0.08);border:1px solid rgba(220,38,38,0.2);border-radius:0.4rem;padding:0.75rem 1rem;">
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                            <p class="text-sm mb-1" style="color:var(--primary);">{{ error }}</p>
+                        {% endfor %}
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <button type="submit" class="btn-red w-full py-3 text-center" style="width:100%;display:block;">
+                    Upload Document →
+                </button>
+            </form>
+            {% endif %}
 
         </div>
     </div>
@@ -153,7 +154,7 @@
 {% if ocr_data %}
 <div class="card-auto p-6 sm:p-8 mt-6">
     <div class="mb-6">
-        <p class="font-title text-xs uppercase tracking-widest mb-1" style="color:var(--primary);">🧠 OCR Result</p>
+        <p class="font-title text-xs uppercase tracking-widests mb-1" style="color:var(--primary);">🧠 OCR Result</p>
         <h2 class="font-display font-bold text-lg" style="color:var(--text);">EXTRACTED DATA</h2>
     </div>
     <div class="divider-red mb-6"></div>

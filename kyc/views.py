@@ -28,16 +28,24 @@ def upload_kyc(request):
     all_uploaded = all(t in uploaded_types for t in all_types)
     ocr_data = None
 
+    # ── Block reason ──
+    if has_approved:
+        block_reason = 'approved'
+    elif has_pending:
+        block_reason = 'pending'
+    else:
+        block_reason = None
+
     if request.method == 'POST':
-        # Block if any pending
+        # Block if any doc is approved
+        if has_approved:
+            messages.error(request, 'Your KYC document has already been approved. No further uploads needed.')
+            return redirect('upload_kyc')
+
+        # Block if any doc is pending
         if has_pending:
             messages.error(request, 'You have a pending document. Please wait for staff to review it.')
             return redirect('upload_kyc')
-
-        # Block if all approved
-        if all_uploaded and has_approved:
-            messages.error(request, 'All your documents are already approved!')
-            return redirect('dashboard')
 
         form = KycUploadForm(request.POST, request.FILES, user=request.user)
         if form.is_valid():
@@ -45,7 +53,7 @@ def upload_kyc(request):
             doc.user = request.user
             doc.save()
 
-            # Run pHash
+            # ── pHash fraud detection ──
             try:
                 from .phash import compute_phash, check_duplicate
                 new_hash = compute_phash(doc.document_image.path)
@@ -55,11 +63,11 @@ def upload_kyc(request):
                 if is_duplicate:
                     doc.is_flagged = True
                     doc.flag_reason = reason
-                    messages.warning(request, f'⚠ Document flagged: {reason}')
+                    messages.warning(request, '⚠ This document appears to already exist in our system. Staff will review it carefully.')
             except Exception as e:
                 messages.warning(request, f'pHash check failed: {str(e)}')
 
-            # Run OCR
+            # ── OCR ──
             if doc.document_type in ['citizenship', 'national_id']:
                 try:
                     from .ocr import extract_text, parse_citizenship
@@ -90,6 +98,13 @@ def upload_kyc(request):
             )
             all_uploaded = all(t in uploaded_types for t in all_types)
 
+            if has_approved:
+                block_reason = 'approved'
+            elif has_pending:
+                block_reason = 'pending'
+            else:
+                block_reason = None
+
             return render(request, 'kyc/upload.html', {
                 'form': KycUploadForm(user=request.user),
                 'existing_docs': existing_docs,
@@ -98,6 +113,7 @@ def upload_kyc(request):
                 'uploaded_types': uploaded_types,
                 'has_pending': has_pending,
                 'has_approved': has_approved,
+                'block_reason': block_reason,
             })
     else:
         form = KycUploadForm(user=request.user)
@@ -110,4 +126,5 @@ def upload_kyc(request):
         'uploaded_types': uploaded_types,
         'has_pending': has_pending,
         'has_approved': has_approved,
+        'block_reason': block_reason,
     })

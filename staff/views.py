@@ -6,6 +6,8 @@ from django.utils import timezone
 from users.models import CustomUser, Profile
 from kyc.models import KycDocument
 from vehicles.models import Vehicle
+from kyc.emails import send_kyc_status_email
+from vehicles.emails import send_vehicle_status_email
 
 def staff_required(view_func):
     def wrapper(request, *args, **kwargs):
@@ -21,10 +23,10 @@ def staff_required(view_func):
 @staff_required
 def staff_dashboard(request):
     total_users = CustomUser.objects.filter(role='end_user').count()
-    pending_kyc = Profile.objects.filter(kyc_status='pending').count()
-    submitted_kyc = Profile.objects.filter(kyc_status='submitted').count()
-    approved_kyc = Profile.objects.filter(kyc_status='approved').count()
-    rejected_kyc = Profile.objects.filter(kyc_status='rejected').count()
+    pending_kyc = Profile.objects.filter(kyc_status='pending', user__role='end_user').count()
+    submitted_kyc = Profile.objects.filter(kyc_status='submitted', user__role='end_user').count()
+    approved_kyc = Profile.objects.filter(kyc_status='approved', user__role='end_user').count()
+    rejected_kyc = Profile.objects.filter(kyc_status='rejected', user__role='end_user').count()
     recent_users = CustomUser.objects.filter(role='end_user').order_by('-date_joined')[:5]
 
     return render(request, 'staff/dashboard.html', {
@@ -48,8 +50,17 @@ def kyc_review_list(request):
     if user_filter:
         documents = documents.filter(user__username=user_filter)
 
+    # Show only latest document per user per type
+    seen = set()
+    latest_docs = []
+    for doc in documents:
+        key = (doc.user_id, doc.document_type)
+        if key not in seen:
+            seen.add(key)
+            latest_docs.append(doc)
+
     return render(request, 'staff/kyc_review.html', {
-        'documents': documents,
+        'documents': latest_docs,
         'status_filter': status_filter,
         'user_filter': user_filter,
     })
@@ -70,11 +81,22 @@ def kyc_review_detail(request, doc_id):
             doc.reviewed_at = timezone.now()
             doc.save()
 
-            all_docs = KycDocument.objects.filter(user=doc.user)
-            if all_docs.filter(status='approved').count() == all_docs.count():
+            # Get latest doc per document type
+            user_docs = KycDocument.objects.filter(user=doc.user)
+            seen_types = set()
+            latest_docs = []
+            for d in user_docs.order_by('-uploaded_at'):
+                if d.document_type not in seen_types:
+                    seen_types.add(d.document_type)
+                    latest_docs.append(d)
+
+            # If any latest doc is approved → grant KYC
+            has_approved = any(d.status == 'approved' for d in latest_docs)
+            if has_approved:
                 doc.user.profile.kyc_status = 'approved'
                 doc.user.profile.save()
 
+            send_kyc_status_email(doc, 'approved')
             messages.success(request, f'Document approved for {doc.user.username}!')
 
         elif action == 'reject':
@@ -84,9 +106,23 @@ def kyc_review_detail(request, doc_id):
             doc.reviewed_at = timezone.now()
             doc.save()
 
-            doc.user.profile.kyc_status = 'rejected'
+            # Check if user still has any approved latest docs
+            user_docs = KycDocument.objects.filter(user=doc.user)
+            seen_types = set()
+            latest_docs = []
+            for d in user_docs.order_by('-uploaded_at'):
+                if d.document_type not in seen_types:
+                    seen_types.add(d.document_type)
+                    latest_docs.append(d)
+
+            has_approved = any(d.status == 'approved' for d in latest_docs)
+            if has_approved:
+                doc.user.profile.kyc_status = 'approved'
+            else:
+                doc.user.profile.kyc_status = 'rejected'
             doc.user.profile.save()
 
+            send_kyc_status_email(doc, 'rejected')
             messages.error(request, f'Document rejected for {doc.user.username}.')
 
         return redirect('kyc_review_list')
@@ -126,6 +162,7 @@ def vehicle_review(request, vehicle_id):
             vehicle.reviewed_by = request.user
             vehicle.reviewed_at = timezone.now()
             vehicle.save()
+            send_vehicle_status_email(vehicle, 'approved')
             messages.success(request, f'Vehicle approved for {vehicle.owner.username}!')
 
         elif action == 'reject':
@@ -134,6 +171,7 @@ def vehicle_review(request, vehicle_id):
             vehicle.reviewed_by = request.user
             vehicle.reviewed_at = timezone.now()
             vehicle.save()
+            send_vehicle_status_email(vehicle, 'rejected')
             messages.error(request, f'Vehicle rejected for {vehicle.owner.username}.')
 
         return redirect('staff_vehicles_list')

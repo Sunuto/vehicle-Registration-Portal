@@ -1,51 +1,60 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .models import Vehicle, VehicleDocument
-from .forms import VehicleRegistrationForm, VehicleDocumentForm
+from django.contrib.auth.decorators import login_required
+from django.db import transaction
+
+from .models import Vehicle
+from .forms import VehicleRegistrationForm
+
 
 @login_required
 def register_vehicle(request):
-    # Block staff
-    if request.user.role == 'staff' or request.user.is_superuser:
-        messages.error(request, 'Staff members cannot register vehicles.')
-        return redirect('staff_dashboard')
 
-    # Block if KYC not approved
-    if request.user.profile.kyc_status != 'approved':
-        messages.error(request, 'You must complete KYC verification before registering a vehicle.')
-        return redirect('dashboard')
+    # STAFF BLOCK
+    if request.user.role == "staff" or request.user.is_superuser:
+        messages.error(request, "Staff cannot register vehicles.")
+        return redirect("staff_dashboard")
 
-    # Only block if there is a PENDING vehicle
-    pending_vehicle = Vehicle.objects.filter(
-        owner=request.user,
-        status='pending'
-    ).first()
+    # SAFE KYC CHECK
+    profile = getattr(request.user, "profile", None)
+    if not profile or profile.kyc_status != "approved":
+        messages.error(request, "KYC must be approved first.")
+        return redirect("dashboard")
 
-    if pending_vehicle:
-        messages.warning(request, 'You have a vehicle registration pending approval. Please wait for staff to review it.')
-        return redirect('my_vehicles')
+    # BLOCK PENDING VEHICLE
+    if Vehicle.objects.filter(owner=request.user, status="pending").exists():
+        messages.warning(request, "You already have a pending vehicle.")
+        return redirect("my_vehicles")
 
-    if request.method == 'POST':
+    if request.method == "POST":
         form = VehicleRegistrationForm(request.POST)
+
         if form.is_valid():
-            vehicle = form.save(commit=False)
-            vehicle.owner = request.user
-            vehicle.save()
-            messages.success(request, 'Vehicle registered successfully! Awaiting staff approval.')
-            return redirect('my_vehicles')
+
+            with transaction.atomic():
+                vehicle = form.save(commit=False)
+                vehicle.owner = request.user
+                vehicle.status = "pending"
+                vehicle.save()
+
+            messages.success(request, "Vehicle submitted for approval.")
+            return redirect("my_vehicles")
+
     else:
         form = VehicleRegistrationForm()
 
-    return render(request, 'vehicles/register.html', {'form': form})
+    return render(request, "vehicles/register.html", {"form": form})
+
 
 @login_required
 def my_vehicles(request):
-    if request.user.role == 'staff' or request.user.is_superuser:
-        return redirect('staff_dashboard')
-    vehicles = Vehicle.objects.filter(owner=request.user).order_by('-submitted_at')
-    pending_vehicle = vehicles.filter(status='pending').first()
-    return render(request, 'vehicles/my_vehicles.html', {
-        'vehicles': vehicles,
-        'pending_vehicle': pending_vehicle,
+
+    if request.user.role == "staff" or request.user.is_superuser:
+        return redirect("staff_dashboard")
+
+    vehicles = Vehicle.objects.filter(owner=request.user).order_by("-submitted_at")
+
+    return render(request, "vehicles/my_vehicles.html", {
+        "vehicles": vehicles,
+        "pending_vehicle": vehicles.filter(status="pending").first(),
     })

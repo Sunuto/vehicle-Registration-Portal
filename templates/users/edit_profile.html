@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% block title %}Edit Profile — VehicleReg{% endblock %}
+
+{% block content %}
+
+<div class="mb-8">
+    <a href="/dashboard/" class="font-title text-xs uppercase tracking-widest hover:underline" style="color:var(--muted);">← Back to Dashboard</a>
+    <h1 class="font-display font-bold text-2xl sm:text-3xl mt-2" style="color:var(--text);">
+        EDIT <span style="color:var(--primary);">PROFILE</span>
+    </h1>
+    <div class="divider-red mt-3 max-w-xs"></div>
+</div>
+
+<div class="card-auto p-6 sm:p-8 max-w-2xl">
+    <form method="post" enctype="multipart/form-data" class="space-y-5">
+        {% csrf_token %}
+
+        <!-- First Name + Last Name -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+                <label class="font-title text-xs uppercase tracking-widest mb-2 block" style="color:var(--muted);">First Name</label>
+                <input type="text" name="first_name" value="{{ form.first_name.value|default:'' }}"
+                    style="background:transparent;border:1px solid var(--border);color:var(--text);border-radius:0.4rem;width:100%;padding:0.75rem 1rem;font-size:0.9rem;outline:none;transition:border 0.2s;font-family:'Exo 2',sans-serif;"
+                    onfocus="this.style.borderColor='var(--primary)'"
+                    onblur="this.style.borderColor='var(--border)'">
+            </div>
+            <div>
+                <label class="font-title text-xs uppercase tracking-widest mb-2 block" style="color:var(--muted);">Last Name</label>
+                <input type="text" name="last_name" value="{{ form.last_name.value|default:'' }}"
+                    style="background:transparent;border:1px solid var(--border);color:var(--text);border-radius:0.4rem;width:100%;padding:0.75rem 1rem;font-size:0.9rem;outline:none;transition:border 0.2s;font-family:'Exo 2',sans-serif;"
+                    onfocus="this.style.borderColor='var(--primary)'"
+                    onblur="this.style.borderColor='var(--border)'">
+            </div>
+        </div>
+
+        <!-- Email -->
+        <div>
+            <label class="font-title text-xs uppercase tracking-widest mb-2 block" style="color:var(--muted);">Email</label>
+            <input type="email" name="email" value="{{ form.email.value|default:'' }}"
+                style="background:transparent;border:1px solid var(--border);color:var(--text);border-radius:0.4rem;width:100%;padding:0.75rem 1rem;font-size:0.9rem;outline:none;transition:border 0.2s;font-family:'Exo 2',sans-serif;"
+                onfocus="this.style.borderColor='var(--primary)'"
+                onblur="this.style.borderColor='var(--border)'">
+        </div>
+
+        <!-- Phone -->
+        <div>
+            <label class="font-title text-xs uppercase tracking-widest mb-2 block" style="color:var(--muted);">Phone Number</label>
+            <input type="text" name="phone" value="{{ form.phone.value|default:'' }}" placeholder="98XXXXXXXX"
+                style="background:transparent;border:1px solid var(--border);color:var(--text);border-radius:0.4rem;width:100%;padding:0.75rem 1rem;font-size:0.9rem;outline:none;transition:border 0.2s;font-family:'Exo 2',sans-serif;"
+                onfocus="this.style.borderColor='var(--primary)'"
+                onblur="this.style.borderColor='var(--border)'">
+        </div>
+
+        <!-- Date of Birth -->
+        <div>
+            <label class="font-title text-xs uppercase tracking-widest mb-2 block" style="color:var(--muted);">Date of Birth</label>
+            <input type="date" name="date_of_birth" value="{{ form.date_of_birth.value|date:'Y-m-d'|default:'' }}"
+                style="background:transparent;border:1px solid var(--border);color:var(--text);border-radius:0.4rem;width:100%;padding:0.75rem 1rem;font-size:0.9rem;outline:none;transition:border 0.2s;font-family:'Exo 2',sans-serif;"
+                onfocus="this.style.borderColor='var(--primary)'"
+                onblur="this.style.borderColor='var(--border)'">
+        </div>
+
+        <!-- Address -->
+        <div>
+            <label class="font-title text-xs uppercase tracking-widest mb-2 block" style="color:var(--muted);">Address</label>
+            <textarea name="address" rows="3" placeholder="Enter your full address"
+                style="background:transparent;border:1px solid var(--border);color:var(--text);border-radius:0.4rem;width:100%;padding:0.75rem 1rem;font-size:0.9rem;outline:none;resize:none;transition:border 0.2s;font-family:'Exo 2',sans-serif;"
+                onfocus="this.style.borderColor='var(--primary)'"
+                onblur="this.style.borderColor='var(--border)'">{{ form.address.value|default:'' }}</textarea>
+        </div>
+
+        <!-- Profile Picture -->
+        <div>
+            <label class="font-title text-xs uppercase tracking-widest mb-2 block" style="color:var(--muted);">Profile Picture</label>
+            <input type="file" name="profile_picture" accept="image/*"
+                style="background:transparent;border:1px solid var(--border);color:var(--text);border-radius:0.4rem;width:100%;padding:0.75rem 1rem;font-size:0.85rem;outline:none;font-family:'Exo 2',sans-serif;">
+        </div>
+
+        <!-- Errors -->
+        {% if form.errors %}
+        <div style="background:rgba(220,38,38,0.08);border:1px solid rgba(220,38,38,0.2);border-radius:0.4rem;padding:0.75rem 1rem;">
+            {% for field in form %}
+                {% for error in field.errors %}
+                    <p class="text-sm mb-1" style="color:var(--primary);">{{ error }}</p>
+                {% endfor %}
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="flex gap-3">
+            <button type="submit" class="btn-red px-6 py-3 text-sm">Save Changes</button>
+            <a href="/dashboard/" class="btn-outline-red px-6 py-3 text-sm">Cancel</a>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

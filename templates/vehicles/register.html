@@ -1,5 +1,6 @@
-{% extends "base.html" %} {% block title %}Register Vehicle — VehicleReg{%
-endblock %} {% block content %}
+{% extends "base.html" %} 
+{% block title %}Register Vehicle — VehicleReg{%endblock %} 
+{% block content %}
 
 <!-- Header -->
 <div class="mb-8">
@@ -395,5 +396,50 @@ endblock %} {% block content %}
     </div>
   </div>
 </div>
+
+<script>
+document.querySelector("form").addEventListener("submit", function (e) {
+    let errors = [];
+
+    const engine = document.querySelector("[name='engine_number']").value.trim();
+    const chassis = document.querySelector("[name='chassis_number']").value.trim();
+    const year = parseInt(document.querySelector("[name='year']").value);
+    const make = document.querySelector("[name='make']").value.trim();
+    const model = document.querySelector("[name='model']").value.trim();
+
+    // Engine validation (Nepal realistic)
+    const engineRegex = /^[A-Z0-9-]{8,20}$/;
+    if (!engineRegex.test(engine)) {
+        errors.push("Invalid engine number format (e.g. 2NZ-1234567)");
+    }
+
+    // Chassis validation (VIN standard used in Nepal)
+    const chassisRegex = /^[A-HJ-NPR-Z0-9]{17}$/;
+    if (!chassisRegex.test(chassis)) {
+        errors.push("Chassis number must be 17 characters (VIN format)");
+    }
+
+    // Year validation (Nepal import reality)
+    const currentYear = new Date().getFullYear();
+    if (year < 1990 || year > currentYear) {
+        errors.push("Invalid vehicle year for Nepal registration");
+    }
+
+    // Make / Model validation
+    const textRegex = /^[A-Za-z\s]+$/;
+    if (!textRegex.test(make)) {
+        errors.push("Make must contain only letters");
+    }
+    if (!textRegex.test(model)) {
+        errors.push("Model must contain only letters");
+    }
+
+    // Show errors
+    if (errors.length > 0) {
+        e.preventDefault();
+        alert(errors.join("\n"));
+    }
+});
+</script>
 
 {% endblock %}

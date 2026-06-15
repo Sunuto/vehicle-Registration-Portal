@@ -27,6 +27,7 @@ urlpatterns = [
     path('register/', views.register_view, name='register'),
     path('login/', views.login_view, name='login'),
     path('logout/', views.logout_view, name='logout'),
+    path('profile/edit/', views.edit_profile, name='edit_profile'),
     path('staff/', include('staff.urls')),
     path('kyc/', include('kyc.urls')),
     path('vehicles/', include('vehicles.urls')),

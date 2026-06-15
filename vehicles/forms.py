@@ -4,118 +4,93 @@ from .models import Vehicle, VehicleDocument
 import datetime
 import re
 
+
 class VehicleRegistrationForm(forms.ModelForm):
     class Meta:
         model = Vehicle
         fields = [
-            'vehicle_type', 'make', 'model',
-            'year', 'color', 'engine_number', 'chassis_number'
+            'vehicle_type',
+            'make',
+            'model',
+            'year',
+            'color',
+            'engine_number',
+            'chassis_number'
         ]
 
     def clean_vehicle_type(self):
-        vehicle_type = self.cleaned_data.get('vehicle_type')
-        if not vehicle_type:
-            raise ValidationError('⚠ Please select a vehicle type.')
-        return vehicle_type
+        value = self.cleaned_data.get('vehicle_type')
+        if not value:
+            raise ValidationError("Vehicle type is required.")
+        return value
 
     def clean_make(self):
         make = self.cleaned_data.get('make', '').strip()
-        if not make:
-            raise ValidationError('⚠ Vehicle make/brand is required.')
         if len(make) < 2:
-            raise ValidationError('⚠ Make must be at least 2 characters.')
-        if len(make) > 100:
-            raise ValidationError('⚠ Make cannot exceed 100 characters.')
-        if not re.match(r'^[a-zA-Z0-9\s\-]+$', make):
-            raise ValidationError('⚠ Make can only contain letters, numbers, spaces and hyphens.')
+            raise ValidationError("Make too short.")
+        if not re.match(r'^[A-Za-z0-9\s\-]+$', make):
+            raise ValidationError("Invalid make format.")
         return make.title()
 
     def clean_model(self):
         model = self.cleaned_data.get('model', '').strip()
-        if not model:
-            raise ValidationError('⚠ Vehicle model is required.')
         if len(model) < 1:
-            raise ValidationError('⚠ Model must be at least 1 character.')
-        if len(model) > 100:
-            raise ValidationError('⚠ Model cannot exceed 100 characters.')
-        if not re.match(r'^[a-zA-Z0-9\s\-]+$', model):
-            raise ValidationError('⚠ Model can only contain letters, numbers, spaces and hyphens.')
+            raise ValidationError("Model required.")
+        if not re.match(r'^[A-Za-z0-9\s\-]+$', model):
+            raise ValidationError("Invalid model format.")
         return model.title()
 
     def clean_year(self):
         year = self.cleaned_data.get('year')
         current_year = datetime.datetime.now().year
-        if not year:
-            raise ValidationError('⚠ Vehicle year is required.')
-        if year < 1990:
-            raise ValidationError('⚠ Year cannot be before 1990.')
-        if year > current_year:
-            raise ValidationError(f'⚠ Year cannot be in the future. Maximum is {current_year}.')
+
+        if year < 1990 or year > current_year:
+            raise ValidationError("Invalid vehicle year for Nepal context.")
         return year
 
     def clean_color(self):
         color = self.cleaned_data.get('color', '').strip()
-        if not color:
-            raise ValidationError('⚠ Vehicle color is required.')
-        if len(color) < 2:
-            raise ValidationError('⚠ Color must be at least 2 characters.')
-        if len(color) > 50:
-            raise ValidationError('⚠ Color cannot exceed 50 characters.')
-        if not re.match(r'^[a-zA-Z\s]+$', color):
-            raise ValidationError('⚠ Color can only contain letters and spaces.')
+        if not re.match(r'^[A-Za-z\s]+$', color):
+            raise ValidationError("Invalid color.")
         return color.title()
 
-def clean_engine_number(self):
-    engine_number = self.cleaned_data.get('engine_number', '').strip().upper()
-    if not engine_number:
-        raise ValidationError('⚠ Engine number is required.')
-    if len(engine_number) < 5:
-        raise ValidationError('⚠ Engine number must be at least 5 characters.')
-    if len(engine_number) > 20:
-        raise ValidationError('⚠ Engine number cannot exceed 20 characters.')
-    if not re.match(r'^[A-Z0-9\-]+$', engine_number):
-        raise ValidationError('⚠ Engine number can only contain uppercase letters, numbers and hyphens.')
+    def clean_engine_number(self):
+        engine = self.cleaned_data.get('engine_number', '').strip().upper()
 
-    # Check uniqueness
-    existing = Vehicle.objects.filter(engine_number=engine_number)
-    if self.instance.pk:
-        existing = existing.exclude(pk=self.instance.pk)
-    if existing.exists():
-        raise ValidationError('⚠ A vehicle with this engine number is already registered.')
+        if not re.match(r'^[A-Z0-9\-]{5,20}$', engine):
+            raise ValidationError("Invalid engine format.")
 
-    return engine_number
+        qs = Vehicle.objects.filter(engine_number=engine)
+        if self.instance.pk:
+            qs = qs.exclude(pk=self.instance.pk)
+        if qs.exists():
+            raise ValidationError("Engine number already exists.")
 
-def clean_chassis_number(self):
-    chassis_number = self.cleaned_data.get('chassis_number', '').strip().upper()
-    if not chassis_number:
-        raise ValidationError('⚠ Chassis number is required.')
-    if len(chassis_number) < 5:
-        raise ValidationError('⚠ Chassis number must be at least 5 characters.')
-    if len(chassis_number) > 17:
-        raise ValidationError('⚠ Chassis/VIN number cannot exceed 17 characters.')
-    if not re.match(r'^[A-Z0-9\-]+$', chassis_number):
-        raise ValidationError('⚠ Chassis number can only contain uppercase letters, numbers and hyphens.')
+        return engine
 
-    # Check uniqueness
-    existing = Vehicle.objects.filter(chassis_number=chassis_number)
-    if self.instance.pk:
-        existing = existing.exclude(pk=self.instance.pk)
-    if existing.exists():
-        raise ValidationError('⚠ A vehicle with this chassis number is already registered.')
+    def clean_chassis_number(self):
+        chassis = self.cleaned_data.get('chassis_number', '').strip().upper()
 
-    return chassis_number
+        if not re.match(r'^[A-HJ-NPR-Z0-9]{17}$', chassis):
+            raise ValidationError("Invalid VIN (Nepal follows VIN 17-char format).")
+
+        qs = Vehicle.objects.filter(chassis_number=chassis)
+        if self.instance.pk:
+            qs = qs.exclude(pk=self.instance.pk)
+        if qs.exists():
+            raise ValidationError("Chassis number already exists.")
+
+        return chassis
 
     def clean(self):
-        cleaned_data = super().clean()
-        engine_number = cleaned_data.get('engine_number', '')
-        chassis_number = cleaned_data.get('chassis_number', '')
+        cleaned = super().clean()
+        engine = cleaned.get("engine_number")
+        chassis = cleaned.get("chassis_number")
 
-        # Engine and chassis numbers must be different
-        if engine_number and chassis_number:
-            if engine_number == chassis_number:
-                raise ValidationError('⚠ Engine number and chassis number cannot be the same.')
+        if engine and chassis and engine == chassis:
+            raise ValidationError("Engine and chassis cannot be same.")
 
-        return cleaned_data
+        return cleaned
 
 
 class VehicleDocumentForm(forms.ModelForm):

@@ -138,3 +138,12 @@ TAILWIND_APP_NAME = 'theme'
 INTERNAL_IPS = ['127.0.0.1']
 
 TESSERACT_PATH = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+
+# Email settings (console backend )
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'sushrab12@gmail.com'        # ← your Gmail address
+EMAIL_HOST_PASSWORD = 'yweoizblcjjxrodw'         # ← 16-char app password (no spaces)
+DEFAULT_FROM_EMAIL = 'sushrab12@gmail.com'      # ← same Gmail address
