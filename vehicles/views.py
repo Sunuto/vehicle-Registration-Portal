@@ -5,6 +5,8 @@ from django.db import transaction
 
 from .models import Vehicle
 from .forms import VehicleRegistrationForm
+from django.http import HttpResponse
+from .pdf import generate_vehicle_registration_slip
 
 
 @login_required
@@ -58,3 +60,19 @@ def my_vehicles(request):
         "vehicles": vehicles,
         "pending_vehicle": vehicles.filter(status="pending").first(),
     })
+    
+@login_required
+def download_registration_slip(request, vehicle_id):
+    from django.shortcuts import get_object_or_404
+    vehicle = get_object_or_404(Vehicle, id=vehicle_id, owner=request.user)
+
+    # Only allow download if approved
+    if vehicle.status != 'approved':
+        messages.error(request, 'Registration slip is only available for approved vehicles.')
+        return redirect('my_vehicles')
+
+    buffer = generate_vehicle_registration_slip(vehicle)
+
+    response = HttpResponse(buffer, content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="VEH-{vehicle.id:06d}-registration-slip.pdf"'
+    return response

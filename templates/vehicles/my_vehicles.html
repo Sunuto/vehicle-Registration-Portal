@@ -97,7 +97,7 @@
           <!-- Status -->
           <div class="flex items-center gap-3">
 
-            <span
+     <span
               class="text-xs px-3 py-1 font-title uppercase tracking-widest rounded"
               style="
                 {% if vehicle.status == 'approved' %}
@@ -123,6 +123,12 @@
                 ⏳ Pending
               {% endif %}
             </span>
+
+            {% if vehicle.status == 'approved' %}
+            <a href="/vehicles/slip/{{ vehicle.id }}/" class="btn-red text-xs px-3 py-1.5">
+                📄 Download Slip
+            </a>
+            {% endif %}
 
             <p class="text-xs hidden sm:block" style="color: var(--muted)">
               {{ vehicle.submitted_at|date:"M d, Y" }}
