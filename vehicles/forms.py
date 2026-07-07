@@ -87,6 +87,12 @@ class VehicleRegistrationForm(forms.ModelForm):
             raise ValidationError("Chassis number already exists.")
 
         return chassis
+    
+    def clean_plate_number(self):
+        plate = self.cleaned_data["plate_number"].upper().strip()
+        if not re.match(r'^[A-Z0-9\s-]{4,20}$', plate):
+            raise ValidationError("Invalid plate number.")
+        return plate
 
     def clean(self):
         cleaned = super().clean()

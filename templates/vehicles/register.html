@@ -36,7 +36,7 @@
       </div>
       <div class="divider-red mb-6"></div>
 
-      <form method="post" class="space-y-5">
+      <form method="post" enctype="multipart/form-data" class="space-y-5">
         {% csrf_token %}
 
         <!-- Vehicle Type -->
@@ -250,6 +250,24 @@
           </div>
         </div>
 
+
+        <!-- Vehicle Documents -->
+        <div class="mt-8">
+          <p class="font-title text-xs uppercase tracking-widest mb-4" style="color: var(--primary)">
+            Vehicle Documents
+          </p>
+          <div class="divider-red mb-5"></div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <div><label class="font-title text-xs uppercase tracking-widest mb-2 block" style="color: var(--muted)">Front View *</label><input type="file" name="front_image" accept="image/*" required></div>
+            <div><label class="font-title text-xs uppercase tracking-widest mb-2 block" style="color: var(--muted)">Rear View *</label><input type="file" name="rear_image" accept="image/*" required></div>
+            <div><label class="font-title text-xs uppercase tracking-widest mb-2 block" style="color: var(--muted)">Left Side *</label><input type="file" name="left_image" accept="image/*" required></div>
+            <div><label class="font-title text-xs uppercase tracking-widest mb-2 block" style="color: var(--muted)">Right Side *</label><input type="file" name="right_image" accept="image/*" required></div>
+            <div><label class="font-title text-xs uppercase tracking-widest mb-2 block" style="color: var(--muted)">Number Plate *</label><input type="file" name="plate_image" accept="image/*" required></div>
+            <div><label class="font-title text-xs uppercase tracking-widest mb-2 block" style="color: var(--muted)">Bluebook *</label><input type="file" name="bluebook_image" accept="image/*" required></div>
+          </div>
+        </div>
+
         <!-- Errors -->
         {% if form.errors %}
         <div
@@ -322,7 +340,16 @@
           <span style="color: var(--primary)">✓</span>
           <p style="color: var(--muted)">Tax clearance certificate required</p>
         </div>
-      </div>
+      
+        <div class="flex items-start gap-2">
+          <span style="color: var(--primary)">✓</span>
+          <p style="color: var(--muted)">Vehicle images must be uploaded for verification</p>
+        </div>
+        <div class="flex items-start gap-2">
+          <span style="color: var(--primary)">✓</span>
+          <p style="color: var(--muted)">Uploaded images are checked for duplicate/fraud detection</p>
+        </div>
+
     </div>
 
     <div class="card-auto p-6">

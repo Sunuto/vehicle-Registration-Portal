@@ -29,8 +29,10 @@ def register_vehicle(request):
         return redirect("my_vehicles")
 
     if request.method == "POST":
-        form = VehicleRegistrationForm(request.POST)
-
+        form = VehicleRegistrationForm(
+        request.POST,
+        request.FILES
+        )
         if form.is_valid():
 
             with transaction.atomic():
@@ -43,10 +45,7 @@ def register_vehicle(request):
             return redirect("my_vehicles")
 
     else:
-        form = VehicleRegistrationForm(
-            request.POST,
-            request.FILES
-            )
+        form = VehicleRegistrationForm()
 
     return render(request, "vehicles/register.html", {"form": form})
 
