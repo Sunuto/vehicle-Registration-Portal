@@ -33,6 +33,48 @@ class Vehicle(models.Model):
 
     registration_number = models.CharField(max_length=30, unique=True, blank=True)
 
+    # Citizen entered vehicle plate number
+    plate_number = models.CharField(
+    max_length=20,
+    unique=True,
+    help_text="Example: BA 2 PA 1234"
+    )
+
+    # Vehicle Images
+    vehicle_front_image = models.ImageField(
+    upload_to="vehicles/front/"
+    )
+
+    vehicle_back_image = models.ImageField(
+    upload_to="vehicles/back/",
+    blank=True,
+    null=True
+    )
+
+    number_plate_image = models.ImageField(
+    upload_to="vehicles/plate/"
+    )
+
+    bluebook_image = models.ImageField(
+    upload_to="vehicles/bluebook/"
+    )
+
+    # Fraud Detection
+    phash = models.CharField(max_length=16, blank=True)
+    dhash = models.CharField(max_length=16, blank=True)
+
+    fraud_score = models.FloatField(default=0)
+
+    is_duplicate = models.BooleanField(default=False)
+
+    duplicate_vehicle = models.ForeignKey(
+        "self",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="duplicate_matches"
+        )
+    
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
 
     remarks = models.TextField(blank=True, null=True)
@@ -63,12 +105,13 @@ class Vehicle(models.Model):
 
 class VehicleDocument(models.Model):
     DOCUMENT_TYPE = (
-        ('insurance', 'Insurance'),
-        ('tax_clearance', 'Tax Clearance'),
-        ('vehicle_photo', 'Vehicle Photo'),
-        ('other', 'Other'),
-    )
-
+        ("front", "Front View"),
+        ("back", "Back View"),
+        ("left", "Left Side"),
+        ("right", "Right Side"),
+        ("plate", "Registration Plate"),
+        ("bluebook", "Bluebook"),
+        )
     vehicle = models.ForeignKey(
         Vehicle,
         on_delete=models.CASCADE,

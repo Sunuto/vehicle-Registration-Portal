@@ -43,7 +43,10 @@ def register_vehicle(request):
             return redirect("my_vehicles")
 
     else:
-        form = VehicleRegistrationForm()
+        form = VehicleRegistrationForm(
+            request.POST,
+            request.FILES
+            )
 
     return render(request, "vehicles/register.html", {"form": form})
 

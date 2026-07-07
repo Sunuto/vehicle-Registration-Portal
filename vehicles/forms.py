@@ -15,8 +15,14 @@ class VehicleRegistrationForm(forms.ModelForm):
             'year',
             'color',
             'engine_number',
-            'chassis_number'
-        ]
+            'chassis_number',
+            'plate_number',
+
+            'vehicle_front_image',
+            'vehicle_back_image',
+            'number_plate_image',
+            'bluebook_image',
+]
 
     def clean_vehicle_type(self):
         value = self.cleaned_data.get('vehicle_type')
