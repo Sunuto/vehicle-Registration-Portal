@@ -1,0 +1,120 @@
+<!-- ================= VEHICLE DETAILS ================= -->
+
+<div class="card-auto p-6 sm:p-8">
+  <div class="mb-6">
+    <p
+      class="font-title text-xs uppercase tracking-widest mb-1"
+      style="color: var(--primary)"
+    >
+      Vehicle Details
+    </p>
+
+    <h2 class="font-display font-bold text-lg" style="color: var(--text)">
+      SUBMIT DETAILS
+    </h2>
+  </div>
+
+  <div class="divider-red mb-6"></div>
+
+  <!-- Vehicle Type -->
+
+  <div>
+    <label
+      class="font-title text-xs uppercase tracking-widest mb-2 block"
+      style="color: var(--muted)"
+    >
+      Vehicle Type
+    </label>
+
+    {{ form.vehicle_type }}
+  </div>
+
+  <!-- Make + Model -->
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-5">
+    <div>
+      <label
+        class="font-title text-xs uppercase tracking-widest mb-2 block"
+        style="color: var(--muted)"
+      >
+        Make (Brand)
+      </label>
+
+      {{ form.make }}
+    </div>
+
+    <div>
+      <label
+        class="font-title text-xs uppercase tracking-widest mb-2 block"
+        style="color: var(--muted)"
+      >
+        Model
+      </label>
+
+      {{ form.model }}
+    </div>
+  </div>
+
+  <!-- Year + Color -->
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-5">
+    <div>
+      <label
+        class="font-title text-xs uppercase tracking-widest mb-2 block"
+        style="color: var(--muted)"
+      >
+        Year
+      </label>
+
+      {{ form.year }}
+    </div>
+
+    <div>
+      <label
+        class="font-title text-xs uppercase tracking-widest mb-2 block"
+        style="color: var(--muted)"
+      >
+        Color
+      </label>
+
+      {{ form.color }}
+    </div>
+  </div>
+
+  <!-- Engine + Chassis -->
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-5">
+    <div>
+      <label
+        class="font-title text-xs uppercase tracking-widest mb-2 block"
+        style="color: var(--muted)"
+      >
+        Engine Number
+      </label>
+
+      {{ form.engine_number }}
+    </div>
+
+    <div>
+      <label
+        class="font-title text-xs uppercase tracking-widest mb-2 block"
+        style="color: var(--muted)"
+      >
+        Chassis Number
+      </label>
+
+      {{ form.chassis_number }}
+    </div>
+
+    <div class="mt-5">
+      <label
+        class="font-title text-xs uppercase tracking-widest mb-2 block"
+        style="color: var(--muted)"
+      >
+        Plate Number
+      </label>
+
+      {{ form.plate_number }}
+    </div>
+  </div>
+</div>

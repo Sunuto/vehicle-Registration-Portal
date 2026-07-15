@@ -10,6 +10,7 @@
       href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Exo+2:wght@300;400;500;600&family=Orbitron:wght@400;700;900&display=swap"
       rel="stylesheet"
     />
+    {% block extra_css %}{% endblock %}
     <style>
       * {
         font-family: "Exo 2", sans-serif;
@@ -395,5 +396,6 @@
         menu.classList.toggle("open");
       }
     </script>
+    {% block extra_js %}{% endblock %}
   </body>
 </html>

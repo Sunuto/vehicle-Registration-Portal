@@ -1,0 +1,50 @@
+<!-- ================= FORM ERRORS ================= -->
+
+{% if form.errors %}
+
+<div
+    class="mt-6"
+    style="
+        background: rgba(220,38,38,.08);
+        border: 1px solid rgba(220,38,38,.2);
+        border-radius: .5rem;
+        padding: 1rem;
+    "
+>
+
+    <p
+        class="font-title text-xs uppercase tracking-widest mb-3"
+        style="color: var(--primary);"
+    >
+        Please fix the following errors
+    </p>
+
+    {% for field in form %}
+
+        {% for error in field.errors %}
+
+            <p
+                class="text-sm mb-1"
+                style="color:#ff7070;"
+            >
+                • {{ error }}
+            </p>
+
+        {% endfor %}
+
+    {% endfor %}
+
+    {% for error in form.non_field_errors %}
+
+        <p
+            class="text-sm mb-1"
+            style="color:#ff7070;"
+        >
+            • {{ error }}
+        </p>
+
+    {% endfor %}
+
+</div>
+
+{% endif %}

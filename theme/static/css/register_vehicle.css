@@ -1,0 +1,301 @@
+/* Hide default file input */
+
+input[type="file"]{
+
+    display:none;
+
+}
+
+/* Upload Card */
+
+.upload-box{
+
+
+    background:var(--card);
+
+
+    border:2px dashed var(--border);
+
+
+    border-radius:16px;
+
+
+    padding:20px;
+
+
+    text-align:center;
+
+
+    min-height:230px;
+
+
+    display:flex;
+
+
+    flex-direction:column;
+
+
+    justify-content:center;
+
+
+    transition:.3s ease;
+
+
+}
+
+
+.upload-box:hover{
+
+
+    border-color:#dc2626;
+
+
+    transform:translateY(-5px);
+
+
+    box-shadow:
+    0 15px 35px rgba(0,0,0,.25);
+
+
+}
+
+
+
+
+
+/* Preview Container */
+
+
+.preview-area{
+
+
+    height:130px;
+
+
+    display:flex;
+
+
+    align-items:center;
+
+
+    justify-content:center;
+
+
+    overflow:hidden;
+
+
+}
+
+
+
+
+.preview-icon{
+
+
+    font-size:60px;
+
+
+    transition:.3s;
+
+
+}
+
+
+
+.group:hover .preview-icon{
+
+
+    transform:scale(1.1);
+
+
+}
+
+
+
+
+.upload-box img{
+
+
+    width:100%;
+
+
+    height:130px;
+
+
+    object-fit:cover;
+
+
+    border-radius:12px;
+
+
+}
+
+
+
+
+.upload-success{
+
+
+    color:#22c55e;
+
+
+    font-weight:bold;
+
+
+}
+
+
+
+
+
+/* Process circles */
+
+
+.step-active{
+
+
+    width:32px;
+
+
+    height:32px;
+
+
+    border-radius:50%;
+
+
+    background:#dc2626;
+
+
+    color:white;
+
+
+    display:flex;
+
+
+    align-items:center;
+
+
+    justify-content:center;
+
+
+    font-weight:bold;
+
+
+}
+
+
+
+
+.step{
+
+
+    width:32px;
+
+
+    height:32px;
+
+
+    border-radius:50%;
+
+
+    background:#374151;
+
+
+    color:white;
+
+
+    display:flex;
+
+
+    align-items:center;
+
+
+    justify-content:center;
+
+
+    font-weight:bold;
+
+
+}
+
+
+
+
+
+@media(max-width:640px){
+
+
+    .upload-box{
+
+
+        min-height:210px;
+
+
+    }
+
+
+    .preview-area{
+
+
+        height:110px;
+
+
+    }
+
+
+    .upload-box img{
+
+
+        height:110px;
+
+
+    }
+
+
+}
+
+/* ==========================================
+   FORM INPUTS
+========================================== */
+
+.form-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+    color: var(--text);
+    font-size: 0.95rem;
+    font-family: "Exo 2", sans-serif;
+    outline: none;
+    transition: all 0.25s ease;
+}
+
+.form-input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.15);
+}
+
+.form-input::placeholder {
+    color: var(--muted);
+}
+
+.form-input:hover {
+    border-color: rgba(220, 38, 38, 0.45);
+}
+
+/* Dropdown */
+
+select.form-input {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    cursor: pointer;
+    background-color: var(--card);
+}
+
+/* File inputs are hidden because custom upload cards are used */
+
+input[type="file"] {
+    display: none;
+}

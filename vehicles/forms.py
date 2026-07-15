@@ -22,88 +22,72 @@ class VehicleRegistrationForm(forms.ModelForm):
             'vehicle_back_image',
             'number_plate_image',
             'bluebook_image',
-]
+        ]
 
-    def clean_vehicle_type(self):
-        value = self.cleaned_data.get('vehicle_type')
-        if not value:
-            raise ValidationError("Vehicle type is required.")
-        return value
+        widgets = {
 
-    def clean_make(self):
-        make = self.cleaned_data.get('make', '').strip()
-        if len(make) < 2:
-            raise ValidationError("Make too short.")
-        if not re.match(r'^[A-Za-z0-9\s\-]+$', make):
-            raise ValidationError("Invalid make format.")
-        return make.title()
+            "vehicle_type": forms.Select(attrs={
+                "class": "form-input",
+            }),
 
-    def clean_model(self):
-        model = self.cleaned_data.get('model', '').strip()
-        if len(model) < 1:
-            raise ValidationError("Model required.")
-        if not re.match(r'^[A-Za-z0-9\s\-]+$', model):
-            raise ValidationError("Invalid model format.")
-        return model.title()
+            "make": forms.TextInput(attrs={
+                "class": "form-input",
+                "placeholder": "e.g. Toyota",
+            }),
 
-    def clean_year(self):
-        year = self.cleaned_data.get('year')
-        current_year = datetime.datetime.now().year
+            "model": forms.TextInput(attrs={
+                "class": "form-input",
+                "placeholder": "e.g. Corolla",
+            }),
 
-        if year < 1990 or year > current_year:
-            raise ValidationError("Invalid vehicle year for Nepal context.")
-        return year
+            "year": forms.NumberInput(attrs={
+                "class": "form-input",
+                "placeholder": "e.g. 2020",
+                "min": "1990",
+                "max": str(datetime.datetime.now().year),
+            }),
 
-    def clean_color(self):
-        color = self.cleaned_data.get('color', '').strip()
-        if not re.match(r'^[A-Za-z\s]+$', color):
-            raise ValidationError("Invalid color.")
-        return color.title()
+            "color": forms.TextInput(attrs={
+                "class": "form-input",
+                "placeholder": "e.g. Red",
+            }),
 
-    def clean_engine_number(self):
-        engine = self.cleaned_data.get('engine_number', '').strip().upper()
+            "engine_number": forms.TextInput(attrs={
+                "class": "form-input",
+                "placeholder": "e.g. 2NZ-1234567",
+            }),
 
-        if not re.match(r'^[A-Z0-9\-]{5,20}$', engine):
-            raise ValidationError("Invalid engine format.")
+            "chassis_number": forms.TextInput(attrs={
+                "class": "form-input",
+                "placeholder": "e.g. MA3FJEB1S00123456",
+            }),
 
-        qs = Vehicle.objects.filter(engine_number=engine)
-        if self.instance.pk:
-            qs = qs.exclude(pk=self.instance.pk)
-        if qs.exists():
-            raise ValidationError("Engine number already exists.")
+            "plate_number": forms.TextInput(attrs={
+                "class": "form-input",
+                "placeholder": "e.g. BA 2 CHA 1234",
+            }),
 
-        return engine
+            # Hide the actual file inputs because your custom upload cards will trigger them
+            "vehicle_front_image": forms.FileInput(attrs={
+                "class": "hidden",
+                "accept": "image/*",
+            }),
 
-    def clean_chassis_number(self):
-        chassis = self.cleaned_data.get('chassis_number', '').strip().upper()
+            "vehicle_back_image": forms.FileInput(attrs={
+                "class": "hidden",
+                "accept": "image/*",
+            }),
 
-        if not re.match(r'^[A-HJ-NPR-Z0-9]{17}$', chassis):
-            raise ValidationError("Invalid VIN (Nepal follows VIN 17-char format).")
+            "number_plate_image": forms.FileInput(attrs={
+                "class": "hidden",
+                "accept": "image/*",
+            }),
 
-        qs = Vehicle.objects.filter(chassis_number=chassis)
-        if self.instance.pk:
-            qs = qs.exclude(pk=self.instance.pk)
-        if qs.exists():
-            raise ValidationError("Chassis number already exists.")
-
-        return chassis
-    
-    def clean_plate_number(self):
-        plate = self.cleaned_data["plate_number"].upper().strip()
-        if not re.match(r'^[A-Z0-9\s-]{4,20}$', plate):
-            raise ValidationError("Invalid plate number.")
-        return plate
-
-    def clean(self):
-        cleaned = super().clean()
-        engine = cleaned.get("engine_number")
-        chassis = cleaned.get("chassis_number")
-
-        if engine and chassis and engine == chassis:
-            raise ValidationError("Engine and chassis cannot be same.")
-
-        return cleaned
-
+            "bluebook_image": forms.FileInput(attrs={
+                "class": "hidden",
+                "accept": "image/*",
+            }),
+        }
 
 class VehicleDocumentForm(forms.ModelForm):
     class Meta:

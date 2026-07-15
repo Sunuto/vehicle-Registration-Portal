@@ -1,0 +1,14 @@
+<!-- ================= SUBMIT BUTTON ================= -->
+{% for field in form %}
+    {% for error in field.errors %}
+        <p style="color:red;">
+            {{ field.label }} : {{ error }}
+        </p>
+    {% endfor %}
+{% endfor %}
+<button
+    type="submit"
+    class="btn-red w-full py-3 mt-4"
+>
+    Submit Vehicle →
+</button>
